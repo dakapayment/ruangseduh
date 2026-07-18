@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ruang Seduh</title>
+    
+    <!-- Google Fonts: Poppins & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    
+    <!-- Tailwind CSS (via CDN untuk styling modern) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1B5E20',
+                        accent: '#E8F5E9',
+                        bg: '#F9FAFB'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #e5e7eb;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Mobile App Container */
+        #app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            overflow-x: hidden;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+
+        /* Material Symbols Customization */
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Skeleton Loading Animation */
+        @keyframes shimmer {
+            0% { background-position: -468px 0; }
+            100% { background-position: 468px 0; }
+        }
+        .skeleton {
+            background: #f6f7f8;
+            background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+            background-repeat: no-repeat;
+            background-size: 800px 100%;
+            animation-duration: 1.5s;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-name: shimmer;
+            animation-timing-function: linear;
+        }
+
+        /* Ripple Effect */
+        .ripple-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-animation {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* Bottom Sheet Transitions */
+        .bottom-sheet {
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+        
+        .overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Toast Animation */
+        .toast {
+            transform: translateY(100px) translateX(-50%);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            left: 50%;
+        }
+        .toast.show {
+            transform: translateY(0) translateX(-50%);
+            opacity: 1;
+        }
+
+        /* Card Hover */
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:active {
+            transform: scale(0.98);
+        }
+
+        /* Custom Radio Button */
+        .custom-radio input:checked + div {
+            background-color: #1B5E20;
+            color: white;
+            border-color: #1B5E20;
+        }
+
+        /* Category Circle Active State */
+        .category-btn.active .cat-icon-container {
+            background-color: #E8F5E9; /* accent */
+            border-color: #1B5E20;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800">
+
+    <div id="app-container">
+        <!-- Full Screen Loading -->
+        <div id="startup-loader" class="fixed inset-0 bg-primary z-[100] flex flex-col items-center justify-center transition-opacity duration-500 max-w-[480px] mx-auto">
+            <span class="material-symbols-rounded text-6xl text-white animate-bounce">coffee_maker</span>
+            <h1 class="text-white text-2xl font-bold mt-4 tracking-wider">RUANG SEDUH</h1>
+            <p class="text-accent text-sm">Pure Drinks, Real Goodness</p>
+        </div>
+
+        <!-- ================= HOME PAGE ================= -->
+        <div id="page-home" class="block pb-10">
+            <!-- Header Baru -->
+            <div class="bg-white px-5 py-4 flex items-center justify-between sticky top-0 z-30">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 bg-primary rounded-full flex items-center justify-center shadow-sm">
+                        <span class="material-symbols-rounded text-white text-[22px]">eco</span>
+                    </div>
+                    <div>
+                        <h1 class="text-[17px] font-bold text-gray-800 leading-tight">Ruang Seduh</h1>
+                        <p class="text-gray-500 text-[10px] font-medium">Pure Drinks, Real Goodness</p>
+                    </div>
+                </div>
+                <div class="relative cursor-pointer w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center transition-colors active:bg-gray-100" onclick="switchTab('cart')">
+                    <span class="material-symbols-rounded text-gray-600 text-xl">shopping_bag</span>
+                    <span id="header-cart-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden border border-white">0</span>
+                </div>
+            </div>
+
+            <!-- Search Baru -->
+            <div class="px-5 mt-1 mb-6 relative z-20">
+                <div class="bg-gray-50 rounded-full flex items-center gap-3 px-4 py-3 border border-gray-100">
+                    <span class="material-symbols-rounded text-gray-400 text-xl">search</span>
+                    <input type="text" id="search-input" placeholder="Cari minuman favoritmu..." class="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400">
+                </div>
+            </div>
+
+            <!-- Promo Banner 
+            <div class="px-5 mb-8">
+                <div class="bg-primary rounded-[20px] p-5 relative overflow-hidden shadow-[0_4px_15px_rgba(27,94,32,0.2)]">
+                    <div class="absolute -right-4 -bottom-6 opacity-10">
+                        <span class="material-symbols-rounded" style="font-size: 140px;">local_activity</span>
+                    </div>
+                    <div class="relative z-10">
+                        <span class="bg-yellow-400 text-gray-900 text-[10px] font-bold px-2 py-0.5 rounded-sm mb-3 inline-block">PROMO</span>
+                        <h2 class="text-white text-[19px] font-bold mb-1">Diskon 20% All Item</h2>
+                        <p class="text-white/90 text-[11px] mb-4 font-light">Khusus pemesanan hari ini!</p>
+                        <button class="bg-white text-primary text-[11px] font-bold px-4 py-2.5 rounded-full shadow-sm hover:bg-gray-50 transition-colors">Klaim Sekarang</button>
+                    </div>
+                </div>
+            </div>-->
+
+            <!-- Kategori Pilihan -->
+            <div class="px-5 mb-8">
+                <h2 class="font-bold text-lg text-gray-800 mb-4">Kategori Pilihan</h2>
+                <div class="flex justify-between items-start" id="category-filters">
+                    <button class="category-btn active flex flex-col items-center gap-2 w-[60px]" data-cat="Semua">
+                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
+                            <span class="material-symbols-rounded text-primary text-[26px]">grid_view</span>
+                        </div>
+                        <span class="text-[11px] font-medium text-gray-800">Semua</span>
+                    </button>
+                    <button class="category-btn flex flex-col items-center gap-2 w-[60px]" data-cat="Minuman Coffee">
+                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
+                            <span class="material-symbols-rounded text-primary text-[26px]">local_cafe</span>
+                        </div>
+                        <span class="text-[11px] font-medium text-gray-800">Coffee</span>
+                    </button>
+                    <button class="category-btn flex flex-col items-center gap-2 w-[60px]" data-cat="Minuman Non Coffee">
+                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
+                            <span class="material-symbols-rounded text-primary text-[26px]">local_drink</span>
+                        </div>
+                        <span class="text-[11px] font-medium text-gray-800">Non Coffee</span>
+                    </button>
+                    <button class="category-btn flex flex-col items-center gap-2 w-[60px]" data-cat="Minuman Segar">
+                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
+                            <span class="material-symbols-rounded text-primary text-[26px]">eco</span>
+                        </div>
+                        <span class="text-[11px] font-medium text-gray-800">Segar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="p-5 min-h-[400px]">
+                <h2 class="font-bold text-lg mb-4 text-gray-800" id="section-title">Semua Menu</h2>
+                
+                <!-- Skeleton Container -->
+                <div id="skeleton-container" class="grid grid-cols-2 gap-4">
+                    <!-- Skeletons injected via JS -->
+                </div>
+
+                <!-- Product Container -->
+                <div id="product-container" class="grid grid-cols-2 gap-4 hidden">
+                    <!-- Products injected via JS -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden flex-col items-center justify-center py-10 text-center">
+                    <span class="material-symbols-rounded text-6xl text-gray-300 mb-3">search_off</span>
+                    <p class="text-gray-500 font-medium">Menu tidak ditemukan</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CART PAGE ================= -->
+        <div id="page-cart" class="hidden min-h-screen bg-bg">
+            <div class="bg-white p-5 shadow-sm sticky top-0 z-20">
+                <h1 class="text-xl font-bold text-gray-800 text-center">Keranjang Pesanan</h1>
+            </div>
+
+            <div id="cart-content" class="p-5">
+                <!-- Cart Items will be injected here -->
+                <div id="cart-items" class="space-y-4 mb-6"></div>
+
+                <!-- Checkout Form -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <h3 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-rounded text-primary">edit_document</span> Detail Pengiriman
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs text-gray-500 font-medium mb-1 block">Nama Pembeli *</label>
+                            <input type="text" id="co-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Masukkan nama">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 font-medium mb-1 block">Nomor WhatsApp *</label>
+                            <input type="tel" id="co-phone" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Contoh: 08123456789">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 font-medium mb-1 block">Metode Pengiriman *</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="custom-radio cursor-pointer">
+                                    <input type="radio" name="co-method" value="Pickup" class="hidden" checked>
+                                    <div class="border border-gray-200 rounded-xl p-3 text-center text-sm font-medium transition-colors text-gray-600 bg-white">Pickup</div>
+                                </label>
+                                <label class="custom-radio cursor-pointer">
+                                    <input type="radio" name="co-method" value="Delivery" class="hidden">
+                                    <div class="border border-gray-200 rounded-xl p-3 text-center text-sm font-medium transition-colors text-gray-600 bg-white">Delivery</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="address-container" class="hidden">
+                            <label class="text-xs text-gray-500 font-medium mb-1 block">Alamat Lengkap *</label>
+                            <textarea id="co-address" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Alamat pengiriman"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 font-medium mb-1 block">Catatan Pesanan (Opsional)</label>
+                            <textarea id="co-note" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Misal: Jangan lupa sedotan"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 border-t border-gray-100 pt-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-gray-600 font-medium">Total Belanja</span>
+                            <span class="text-xl font-bold text-primary" id="cart-total-price">Rp0</span>
+                        </div>
+                        <button onclick="checkout()" class="ripple-btn w-full bg-primary text-white font-semibold rounded-xl py-3.5 flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
+                            <span class="material-symbols-rounded">send</span> Checkout via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Cart State -->
+            <div id="empty-cart" class="hidden flex-col items-center justify-center py-20 text-center px-5">
+                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <span class="material-symbols-rounded text-5xl text-gray-400">shopping_cart_off</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Keranjang Masih Kosong</h3>
+                <p class="text-gray-500 text-sm mt-2 mb-6">Yuk, pilih minuman segar favoritmu sekarang!</p>
+                <button onclick="switchTab('home')" class="bg-primary text-white px-6 py-2.5 rounded-full font-medium shadow-md">Lihat Menu</button>
+            </div>
+        </div>
+
+        <!-- ================= BOTTOM NAVIGATION ================= -->
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t border-gray-100 flex justify-around items-center py-3 px-2 z-40 shadow-[0_-5px_15px_rgba(0,0,0,0.03)] pb-safe rounded-t-2xl">
+            <button onclick="switchTab('home')" class="nav-btn w-1/2 flex flex-col items-center gap-1 text-primary transition-colors">
+                <span class="material-symbols-rounded text-2xl" id="nav-icon-home">home</span>
+                <span class="text-[10px] font-medium">Home</span>
+            </button>
+            <button onclick="switchTab('cart')" class="nav-btn w-1/2 flex flex-col items-center gap-1 text-gray-400 transition-colors relative">
+                <div class="relative">
+                    <span class="material-symbols-rounded text-2xl icon-outlined" id="nav-icon-cart">shopping_cart</span>
+                    <span id="cart-badge" class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </div>
+                <span class="text-[10px] font-medium">Keranjang</span>
+            </button>
+        </div>
+
+        <!-- ================= BOTTOM SHEET (PRODUCT DETAIL) ================= -->
+        <div id="sheet-overlay" class="overlay fixed inset-0 bg-black/50 z-50 max-w-[480px] mx-auto" onclick="closeSheet()"></div>
+        
+        <div id="bottom-sheet" class="bottom-sheet fixed bottom-0 w-full max-w-[480px] bg-white rounded-t-[30px] z-[60] flex flex-col max-h-[85vh] shadow-2xl">
+            <!-- Drag Handle -->
+            <div class="w-full flex justify-center py-3" onclick="closeSheet()">
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+            </div>
+            
+            <div class="overflow-y-auto px-6 pb-6 no-scrollbar">
+                <div class="relative rounded-2xl overflow-hidden mb-4 bg-gray-100 h-64">
+                    <img id="detail-img" src="" alt="Product" class="w-full h-full object-cover">
+                    <button onclick="closeSheet()" class="absolute top-3 right-3 bg-white/80 backdrop-blur p-1.5 rounded-full text-gray-700 shadow-sm">
+                        <span class="material-symbols-rounded text-xl">close</span>
+                    </button>
+                </div>
+
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 id="detail-name" class="text-xl font-bold text-gray-800">Nama Produk</h2>
+                        <p id="detail-category" class="text-sm text-primary font-medium mt-0.5">Kategori</p>
+                    </div>
+                    <span id="detail-price" class="text-xl font-bold text-gray-800">Rp0</span>
+                </div>
+
+                <hr class="border-gray-100 my-4">
+
+                <!-- Variations -->
+                <div class="space-y-5">
+                    <!-- Es -->
+                    <div>
+                        <h4 class="font-semibold text-gray-800 text-sm mb-2">Tingkat Es</h4>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="custom-radio cursor-pointer">
+                                <input type="radio" name="opt-es" value="Normal" class="hidden" checked>
+                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">Normal</div>
+                            </label>
+                            <label class="custom-radio cursor-pointer">
+                                <input type="radio" name="opt-es" value="Less Ice" class="hidden">
+                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">Less Ice</div>
+                            </label>
+                            <label class="custom-radio cursor-pointer">
+                                <input type="radio" name="opt-es" value="No Ice" class="hidden">
+                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">No Ice</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Gula -->
+                    <div>
+                        <h4 class="font-semibold text-gray-800 text-sm mb-2">Tingkat Gula</h4>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="custom-radio cursor-pointer">
+                                <input type="radio" name="opt-gula" value="Normal" class="hidden" checked>
+                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">Normal</div>
+                            </label>
+                            <label class="custom-radio cursor-pointer">
+                                <input type="radio" name="opt-gula" value="extra sugar" class="hidden">
+                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">extra sugar</div>
+                            </label>
+                            <label class="custom-radio cursor-pointer">
+                                <input type="radio" name="opt-gula" value="No Sugar" class="hidden">
+                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">No Sugar</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Note -->
+                    <div>
+                        <h4 class="font-semibold text-gray-800 text-sm mb-2">Catatan Tambahan</h4>
+                        <textarea id="detail-note" rows="2" class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-primary bg-gray-50" placeholder="Misal: Jangan terlalu manis"></textarea>
+                    </div>
+
+                    <!-- Quantity & Add -->
+                    <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-4 bg-gray-50 p-1.5 rounded-full border border-gray-200">
+                            <button onclick="updateQty(-1)" class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-600 active:bg-gray-100">
+                                <span class="material-symbols-rounded text-lg">remove</span>
+                            </button>
+                            <span id="detail-qty" class="font-bold w-4 text-center text-gray-800">1</span>
+                            <button onclick="updateQty(1)" class="w-8 h-8 flex items-center justify-center bg-primary rounded-full shadow-sm text-white active:bg-green-800">
+                                <span class="material-symbols-rounded text-lg">add</span>
+                            </button>
+                        </div>
+                        <button onclick="addToCart()" class="ripple-btn flex-1 ml-4 bg-primary text-white font-semibold py-3 rounded-2xl shadow-lg shadow-green-900/20 active:bg-green-800 transition-colors">
+                            Tambah - <span id="detail-total-price">Rp0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TOAST NOTIFICATION ================= -->
+        <div id="toast" class="toast fixed bottom-20 bg-gray-900/90 backdrop-blur text-white px-5 py-3 rounded-full shadow-xl z-[70] flex items-center gap-2 pointer-events-none max-w-[90%]">
+            <span class="material-symbols-rounded text-green-400 text-xl">check_circle</span>
+            <span id="toast-msg" class="text-sm font-medium">Berhasil ditambahkan</span>
+        </div>
+
+        <!-- Floating WhatsApp Chat -->
+        <a href="https://wa.me/6285351708411" target="_blank" class="fixed bottom-24 right-4 md:right-[calc(50vw-220px)] w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(37,211,102,0.4)] z-[45] ripple-btn hover:scale-105 transition-transform">
+            <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.245 3.487 5.236 3.487 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.312 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        </a>
+
+    </div>
+
+    <script>
+        // Data Minuman (Mirip JSON Data)
+        const products = [
+            // NON COFFEE
+            { id: 'nc1', category: 'Minuman Non Coffee', name: 'Coklat Premium', price: 12000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Coklat+Premium' },
+            { id: 'nc2', category: 'Minuman Non Coffee', name: 'Cookies and Cream', price: 12000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Cookies+Cream' },
+            { id: 'nc3', category: 'Minuman Non Coffee', name: 'Green Tea', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Green+Tea' },
+            { id: 'nc4', category: 'Minuman Non Coffee', name: 'Thai Tea', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Thai+Tea' },
+            { id: 'nc5', category: 'Minuman Non Coffee', name: 'Matcha Premium', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Matcha' },
+            
+            // SEGAR
+            { id: 'sg1', category: 'Minuman Segar', name: 'Sunkist Original', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Sunkist+Ori' },
+            { id: 'sg2', category: 'Minuman Segar', name: 'Sunkist Madu', price: 17000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Sunkist+Madu' },
+            { id: 'sg3', category: 'Minuman Segar', name: 'Sunkist Yakult', price: 17000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Sunkist+Yakult' },
+            { id: 'sg4', category: 'Minuman Segar', name: 'Limonada Fresca', price: 10000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Limonada' },
+            { id: 'sg5', category: 'Minuman Segar', name: 'Peach Tea', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Peach+Tea' },
+
+            // COFFEE
+            { id: 'cf1', category: 'Minuman Coffee', name: 'Mocha Intenso', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Mocha+Intenso' },
+            { id: 'cf2', category: 'Minuman Coffee', name: 'Kopi Gula Aren', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Gula+Aren' },
+            { id: 'cf3', category: 'Minuman Coffee', name: 'Black Bee Coffee', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Black+Bee' },
+            { id: 'cf4', category: 'Minuman Coffee', name: 'Coffee Butterscotch', price: 15000, img: 'https://placehold.co/400x400/1B5E20/FFFFFF?text=Butterscotch' }
+        ];
+
+        // State Variables
+        let cart = JSON.parse(localStorage.getItem('ruangseduh_cart')) || [];
+        let activeCategory = 'Semua';
+        let searchQuery = '';
+        let selectedProduct = null;
+        let currentQty = 1;
+        const phoneTarget = '6285351708411';
+
+        // Helper: Format Rupiah
+        const formatRp = (angka) => {
+            return 'Rp' + angka.toLocaleString('id-ID');
+        };
+
+        window.onload = () => {
+            // Hilangkan Loader
+            setTimeout(() => {
+                document.getElementById('startup-loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('startup-loader').style.display = 'none';
+                    renderSkeletons();
+                    // Simulasi loading data
+                    setTimeout(() => {
+                        renderMenu();
+                        updateCartBadge();
+                    }, 800);
+                }, 500);
+            }, 1000);
+
+            setupRippleEffect();
+            setupEventListeners();
+        };
+
+        function setupEventListeners() {
+            // Filter Kategori
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const targetBtn = e.currentTarget;
+                    
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    targetBtn.classList.add('active');
+                    
+                    activeCategory = targetBtn.getAttribute('data-cat');
+                    document.getElementById('section-title').textContent = activeCategory === 'Semua' ? 'Semua Menu' : activeCategory;
+                    renderMenu();
+                });
+            });
+
+            // Search
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderMenu();
+            });
+
+            // Delivery Method Toggle
+            document.getElementsByName('co-method').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const addressContainer = document.getElementById('address-container');
+                    if(e.target.value === 'Delivery') {
+                        addressContainer.classList.remove('hidden');
+                    } else {
+                        addressContainer.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        // Animasi Ripple untuk tombol
+        function setupRippleEffect() {
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('.ripple-btn');
+                if (!target) return;
+
+                const rect = target.getBoundingClientRect();
+                const d = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - d/2;
+                const y = e.clientY - rect.top - d/2;
+                
+                const ripple = document.createElement('span');
+                ripple.style.width = ripple.style.height = `${d}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.classList.add('ripple');
+                
+                target.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        }
+
+        function renderSkeletons() {
+            const container = document.getElementById('skeleton-container');
+            const pContainer = document.getElementById('product-container');
+            container.innerHTML = '';
+            
+            for(let i=0; i<6; i++) {
+                container.innerHTML += `
+                    <div class="bg-white rounded-[20px] p-3 shadow-sm border border-gray-50">
+                        <div class="skeleton h-32 w-full rounded-xl mb-3"></div>
+                        <div class="skeleton h-4 w-3/4 rounded mb-2"></div>
+                        <div class="skeleton h-4 w-1/2 rounded mb-3"></div>
+                        <div class="skeleton h-8 w-full rounded-lg"></div>
+                    </div>
+                `;
+            }
+            container.style.display = 'grid';
+            pContainer.style.display = 'none';
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('product-container');
+            const sContainer = document.getElementById('skeleton-container');
+            const emptyState = document.getElementById('empty-state');
+            
+            sContainer.style.display = 'none';
+            container.innerHTML = '';
+            
+            const filtered = products.filter(p => {
+                const matchCat = activeCategory === 'Semua' || p.category === activeCategory;
+                const matchSearch = p.name.toLowerCase().includes(searchQuery);
+                return matchCat && matchSearch;
+            });
+
+            if(filtered.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'flex';
+                return;
+            }
+
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            filtered.forEach((p, index) => {
+                // Menambahkan Tag PROMO / BEST seperti di gambar
+                let tagHtml = '';
+                if (index === 0) {
+                    tagHtml = '<div class="absolute top-0 right-3 bg-yellow-400 text-gray-900 text-[9px] font-bold px-2 py-1 rounded-b flex items-center gap-1 shadow-sm z-10"><span class="material-symbols-rounded text-[11px]">workspace_premium</span>BEST</div>';
+                } else if (index === 1) {
+                    tagHtml = '<div class="absolute top-0 left-3 bg-red-500 text-white text-[9px] font-bold px-2 py-1 rounded-b flex items-center gap-1 shadow-sm z-10"><span class="material-symbols-rounded text-[11px]">sell</span>PROMO</div>';
+                }
+
+                container.innerHTML += `
+                    <div class="product-card bg-white rounded-[20px] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 cursor-pointer flex flex-col h-full relative" onclick="openProductDetail('${p.id}')">
+                        ${tagHtml}
+                        <div class="w-full h-[140px] bg-gray-100 relative">
+                            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3.5 bg-white flex-1 flex flex-col">
+                            <h3 class="font-bold text-gray-800 text-[13px] leading-tight mb-1 truncate">${p.name}</h3>
+                            <p class="text-[10px] text-gray-400 mb-2 truncate">${p.category}</p>
+                            <p class="font-bold text-primary text-[15px] mt-auto">${formatRp(p.price)}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openProductDetail(id) {
+            selectedProduct = products.find(p => p.id === id);
+            if(!selectedProduct) return;
+
+            // Reset state
+            currentQty = 1;
+            document.getElementById('detail-qty').textContent = currentQty;
+            document.querySelector('input[name="opt-es"][value="Normal"]').checked = true;
+            document.querySelector('input[name="opt-gula"][value="Normal"]').checked = true;
+            document.getElementById('detail-note').value = '';
+
+            // Update UI
+            document.getElementById('detail-img').src = selectedProduct.img;
+            document.getElementById('detail-name').textContent = selectedProduct.name;
+            document.getElementById('detail-category').textContent = selectedProduct.category;
+            document.getElementById('detail-price').textContent = formatRp(selectedProduct.price);
+            updateSheetTotal();
+
+            // Show sheet
+            document.getElementById('sheet-overlay').classList.add('open');
+            document.getElementById('bottom-sheet').classList.add('open');
+        }
+
+        function closeSheet() {
+            document.getElementById('sheet-overlay').classList.remove('open');
+            document.getElementById('bottom-sheet').classList.remove('open');
+            selectedProduct = null;
+        }
+
+        function updateQty(change) {
+            currentQty += change;
+            if(currentQty < 1) currentQty = 1;
+            document.getElementById('detail-qty').textContent = currentQty;
+            updateSheetTotal();
+        }
+
+        function updateSheetTotal() {
+            if(selectedProduct) {
+                document.getElementById('detail-total-price').textContent = formatRp(selectedProduct.price * currentQty);
+            }
+        }
+
+        function addToCart() {
+            if(!selectedProduct) return;
+
+            const es = document.querySelector('input[name="opt-es"]:checked').value;
+            const gula = document.querySelector('input[name="opt-gula"]:checked').value;
+            const note = document.getElementById('detail-note').value.trim();
+
+            // Cek apakah item sama persis sudah ada
+            const existingIndex = cart.findIndex(item => 
+                item.id === selectedProduct.id && 
+                item.es === es && 
+                item.gula === gula && 
+                item.note === note
+            );
+
+            if(existingIndex >= 0) {
+                cart[existingIndex].qty += currentQty;
+            } else {
+                cart.push({
+                    id: selectedProduct.id,
+                    name: selectedProduct.name,
+                    price: selectedProduct.price,
+                    img: selectedProduct.img,
+                    es: es,
+                    gula: gula,
+                    note: note,
+                    qty: currentQty
+                });
+            }
+
+            saveCart();
+            closeSheet();
+            showToast('Berhasil masuk keranjang');
+        }
+
+        function saveCart() {
+            localStorage.setItem('ruangseduh_cart', JSON.stringify(cart));
+            updateCartBadge();
+            if(document.getElementById('page-cart').classList.contains('block')) {
+                renderCart();
+            }
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const headerBadge = document.getElementById('header-cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            
+            if(totalItems > 0) {
+                const text = totalItems > 99 ? '99+' : totalItems;
+                badge.textContent = text;
+                badge.classList.remove('hidden');
+                if(headerBadge) {
+                    headerBadge.textContent = text;
+                    headerBadge.classList.remove('hidden');
+                }
+            } else {
+                badge.classList.add('hidden');
+                if(headerBadge) {
+                    headerBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveCart();
+        }
+
+        function updateCartQty(index, change) {
+            cart[index].qty += change;
+            if(cart[index].qty < 1) {
+                removeFromCart(index);
+            } else {
+                saveCart();
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const contentArea = document.getElementById('cart-content');
+            const emptyArea = document.getElementById('empty-cart');
+            const totalPriceEl = document.getElementById('cart-total-price');
+
+            if(cart.length === 0) {
+                contentArea.classList.add('hidden');
+                emptyArea.classList.remove('hidden');
+                emptyArea.classList.add('flex');
+                return;
+            }
+
+            contentArea.classList.remove('hidden');
+            emptyArea.classList.add('hidden');
+            emptyArea.classList.remove('flex');
+            
+            container.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+
+                let optionsText = `Es: ${item.es} | Gula: ${item.gula}`;
+                if(item.note) optionsText += ` | Catatan: ${item.note}`;
+
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex gap-3 relative">
+                        <img src="${item.img}" alt="${item.name}" class="w-20 h-20 rounded-xl object-cover bg-gray-100">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800 text-sm leading-tight pr-8">${item.name}</h4>
+                            <p class="text-[11px] text-gray-500 mt-1 leading-snug">${optionsText}</p>
+                            <div class="flex justify-between items-end mt-2">
+                                <span class="font-bold text-primary text-sm">${formatRp(item.price)}</span>
+                                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-1 border border-gray-100">
+                                    <button onclick="updateCartQty(${index}, -1)" class="w-6 h-6 flex items-center justify-center bg-white rounded text-gray-600 shadow-sm active:bg-gray-100">
+                                        <span class="material-symbols-rounded text-sm">${item.qty === 1 ? 'delete' : 'remove'}</span>
+                                    </button>
+                                    <span class="font-bold text-xs w-4 text-center text-gray-800">${item.qty}</span>
+                                    <button onclick="updateCartQty(${index}, 1)" class="w-6 h-6 flex items-center justify-center bg-primary rounded text-white shadow-sm active:bg-green-800">
+                                        <span class="material-symbols-rounded text-sm">add</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            totalPriceEl.textContent = formatRp(total);
+        }
+
+        function switchTab(tab) {
+            const pageHome = document.getElementById('page-home');
+            const pageCart = document.getElementById('page-cart');
+            const navHome = document.getElementById('nav-icon-home');
+            const navCart = document.getElementById('nav-icon-cart');
+            const btnHome = navHome.parentElement;
+            const btnCart = navCart.parentElement;
+
+            if(tab === 'home') {
+                pageHome.classList.add('block');
+                pageHome.classList.remove('hidden');
+                pageCart.classList.add('hidden');
+                pageCart.classList.remove('block');
+
+                // Styling Nav
+                btnHome.classList.remove('text-gray-400');
+                btnHome.classList.add('text-primary');
+                navHome.classList.remove('icon-outlined');
+                
+                btnCart.classList.remove('text-primary');
+                btnCart.classList.add('text-gray-400');
+                navCart.classList.add('icon-outlined');
+
+                window.scrollTo(0,0);
+            } else {
+                pageHome.classList.remove('block');
+                pageHome.classList.add('hidden');
+                pageCart.classList.remove('hidden');
+                pageCart.classList.add('block');
+
+                // Styling Nav
+                btnCart.classList.remove('text-gray-400');
+                btnCart.classList.add('text-primary');
+                navCart.classList.remove('icon-outlined');
+                
+                btnHome.classList.remove('text-primary');
+                btnHome.classList.add('text-gray-400');
+                navHome.classList.add('icon-outlined');
+
+                renderCart();
+                window.scrollTo(0,0);
+            }
+        }
+
+        function checkout() {
+            if(cart.length === 0) return;
+
+            const name = document.getElementById('co-name').value.trim();
+            const phone = document.getElementById('co-phone').value.trim();
+            const method = document.querySelector('input[name="co-method"]:checked').value;
+            const address = document.getElementById('co-address').value.trim();
+            const orderNote = document.getElementById('co-note').value.trim();
+
+            // Validasi Input
+            if(!name || !phone) {
+                showToast('Mohon lengkapi Nama dan No WhatsApp');
+                return;
+            }
+            if(method === 'Delivery' && !address) {
+                showToast('Mohon isi alamat pengiriman');
+                return;
+            }
+
+            // Generate Pesan WA
+            let msg = `Halo Ruang Seduh,\n\nSaya ingin memesan:\n\n====================\n\n`;
+            let totalSemua = 0;
+
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.qty;
+                totalSemua += subtotal;
+
+                msg += `${index + 1}. ${item.name}\n`;
+                msg += `Harga : ${formatRp(item.price)}\n`;
+                msg += `Jumlah : ${item.qty}\n`;
+                msg += `Es : ${item.es}\n`;
+                msg += `Gula : ${item.gula}\n`;
+                if(item.note) msg += `Catatan : ${item.note}\n`;
+                msg += `Subtotal : ${formatRp(subtotal)}\n\n====================\n\n`;
+            });
+
+            msg += `TOTAL : *${formatRp(totalSemua)}*\n\n`;
+            msg += `Nama : ${name}\n`;
+            msg += `No WA : ${phone}\n`;
+            msg += `Metode : ${method}\n`;
+            if(method === 'Delivery') msg += `Alamat : ${address}\n`;
+            if(orderNote) msg += `Catatan Pesanan : ${orderNote}\n\n`;
+            msg += `Terima kasih.`;
+
+            // Buka WhatsApp
+            const waUrl = `https://wa.me/${phoneTarget}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+            
+            // Opsional: Kosongkan keranjang setelah checkout (Buka komentar jika ingin aktif)
+            // cart = [];
+            // saveCart();
+            // switchTab('home');
+        }
+    </script>
+</body>
+</html>
