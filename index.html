@@ -1,914 +1,933 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ruang Seduh</title>
-    
-    <!-- Google Fonts: Poppins & Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
-    
-    <!-- Tailwind CSS (via CDN untuk styling modern) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1B5E20',
-                        accent: '#E8F5E9',
-                        bg: '#F9FAFB'
-                    },
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruang Seduh - Premium Coffee Application</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React 18 & ReactDOM 18 CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone CDN -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <style>
-        body {
-            background-color: #e5e7eb;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        /* Mobile App Container */
-        #app-container {
-            max-width: 480px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
-            overflow-x: hidden;
-            padding-bottom: 80px; /* Space for bottom nav */
-        }
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-        /* Material Symbols Customization */
-        .material-symbols-rounded {
-            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .icon-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        /* Hide Scrollbar */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Skeleton Loading Animation */
-        @keyframes shimmer {
-            0% { background-position: -468px 0; }
-            100% { background-position: 468px 0; }
-        }
-        .skeleton {
-            background: #f6f7f8;
-            background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
-            background-repeat: no-repeat;
-            background-size: 800px 100%;
-            animation-duration: 1.5s;
-            animation-fill-mode: forwards;
-            animation-iteration-count: infinite;
-            animation-name: shimmer;
-            animation-timing-function: linear;
-        }
-
-        /* Ripple Effect */
-        .ripple-btn {
-            position: relative;
-            overflow: hidden;
-        }
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            transform: scale(0);
-            animation: ripple-animation 0.6s linear;
-            pointer-events: none;
-        }
-        @keyframes ripple-animation {
-            to { transform: scale(4); opacity: 0; }
-        }
-
-        /* Bottom Sheet Transitions */
-        .bottom-sheet {
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .bottom-sheet.open {
-            transform: translateY(0);
-        }
-        
-        .overlay {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Toast Animation */
-        .toast {
-            transform: translateY(100px) translateX(-50%);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            left: 50%;
-        }
-        .toast.show {
-            transform: translateY(0) translateX(-50%);
-            opacity: 1;
-        }
-
-        /* Card Hover */
-        .product-card {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .product-card:active {
-            transform: scale(0.98);
-        }
-
-        /* Custom Radio Button */
-        .custom-radio input:checked + div {
-            background-color: #1B5E20;
-            color: white;
-            border-color: #1B5E20;
-        }
-
-        /* Category Circle Active State */
-        .category-btn.active .cat-icon-container {
-            background-color: #E8F5E9; /* accent */
-            border-color: #1B5E20;
-        }
-    </style>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
-<body class="font-sans text-gray-800">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+  
+  <div id="root"></div>
 
-    <div id="app-container">
-        <!-- Full Screen Loading -->
-        <div id="startup-loader" class="fixed inset-0 bg-primary z-[100] flex flex-col items-center justify-center transition-opacity duration-500 max-w-[480px] mx-auto">
-            <span class="material-symbols-rounded text-6xl text-white animate-bounce">coffee_maker</span>
-            <h1 class="text-white text-2xl font-bold mt-4 tracking-wider">RUANG SEDUH</h1>
-            <p class="text-accent text-sm">Pure Drinks, Real Goodness</p>
-        </div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
 
-        <!-- ================= HOME PAGE ================= -->
-        <div id="page-home" class="block pb-10">
-            <!-- Header Baru -->
-            <div class="bg-white px-5 py-4 flex items-center justify-between sticky top-0 z-30">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 bg-primary rounded-full flex items-center justify-center shadow-sm">
-                        <span class="material-symbols-rounded text-white text-[22px]">eco</span>
-                    </div>
-                    <div>
-                        <h1 class="text-[17px] font-bold text-gray-800 leading-tight">Ruang Seduh</h1>
-                        <p class="text-gray-500 text-[10px] font-medium">Pure Drinks, Real Goodness</p>
-                    </div>
-                </div>
-                <div class="relative cursor-pointer w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center transition-colors active:bg-gray-100" onclick="switchTab('cart')">
-                    <span class="material-symbols-rounded text-gray-600 text-xl">shopping_bag</span>
-                    <span id="header-cart-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden border border-white">0</span>
-                </div>
-            </div>
+    // SVG Icons
+    const Coffee = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>);
+    const ShoppingBag = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>);
+    const Award = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 22 12 17 17 22 15.79 13.88"/></svg>);
+    const Clock = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>);
+    const User = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>);
+    const QrCode = ({ className = "w-5 h-5", size = 20 }) => (<svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="18" y1="7" x2="18.01" y2="7"/><line x1="7" y1="18" x2="7.01" y2="18"/><line x1="18" y1="18" x2="18.01" y2="18"/></svg>);
+    const Plus = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>);
+    const Minus = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>);
+    const Trash2 = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>);
+    const Sun = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>);
+    const Moon = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>);
+    const ChevronRight = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>);
+    const Gift = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>);
+    const ShoppingCart = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>);
+    const Sparkles = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>);
+    const X = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>);
+    const Check = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>);
+    const Ticket = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>);
+    const LogOut = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>);
+    const LogIn = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>);
+    const UserCheck = ({ className = "w-5 h-5" }) => (<svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>);
 
-            <!-- Search Baru -->
-            <div class="px-5 mt-1 mb-6 relative z-20">
-                <div class="bg-gray-50 rounded-full flex items-center gap-3 px-4 py-3 border border-gray-100">
-                    <span class="material-symbols-rounded text-gray-400 text-xl">search</span>
-                    <input type="text" id="search-input" placeholder="Cari minuman favoritmu..." class="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-gray-400">
-                </div>
-            </div>
+    // INITIAL MENU
+    const INITIAL_MENU = [
+      { id: 'm1', name: 'Mocha Intenso', category: 'Coffee', price: 18000, desc: 'Perpaduan antara coklat premium dengan kopi robusta pilihan', image: 'https://images.bukaolshop.com/hosting/38154/08b5850b46db416355.png' },
+      { id: 'm2', name: 'Kopi Gula Aren', category: 'Coffee', price: 15000, desc: 'Paduan espresso kaya rasa, susu creamy, dan gula aren organik spesial.', image: 'https://images.bukaolshop.com/hosting/38154/7962862d9d07489063.png' },
+      { id: 'm3', name: 'Coffee Butterscotch', category: 'Coffee', price: 15000, desc: 'Coffee Butterscotch.', image: 'https://images.bukaolshop.com/hosting/38154/8dd5ab18c9b1471610.png' },
+      { id: 'm9', name: 'Black Bee Coffee', category: 'Coffee', price: 15000, desc: 'Black Bee Coffee.', image: 'https://images.bukaolshop.com/hosting/38154/84a2312e5226802454.png' },
+      { id: 'm4', name: 'Artisan Velvet Matcha', category: 'Non Coffee', price: 42000, desc: 'Matcha Uji Jepang kelas premium dipadukan dengan milk foam lembut.', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&q=80' },
+      { id: 'm5', name: 'Belgian Dark Chocolate', category: 'Non Coffee', price: 40000, desc: 'Cokelat hitam belgia kental hangat atau dingin dengan hint sea salt.', image: 'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=500&q=80' },
+      { id: 'm6', name: 'Sparkling Yuzu Blossom', category: 'Fresh Drink', price: 36000, desc: 'Perasan jeruk Yuzu asli, air soda, dan ekstrak bunga telang segar.', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&q=80' },
+      { id: 'm7', name: 'Berry Hibiscus Cooler', category: 'Fresh Drink', price: 34000, desc: 'Teh hibiscus diseduh dingin bersama potongan stroberi segar dan mint.', image: 'https://images.unsplash.com/photo-1556881286-fc6915169721?w=500&q=80' },
+      { id: 'm8', name: 'French Croissant Warm', category: 'Cemilan', price: 25000, desc: 'Roti croissant renyah dengan rasa mentega kaya yang hangat.', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80' },
+    ];
 
-            <!-- Promo Banner 
-            <div class="px-5 mb-8">
-                <div class="bg-primary rounded-[20px] p-5 relative overflow-hidden shadow-[0_4px_15px_rgba(27,94,32,0.2)]">
-                    <div class="absolute -right-4 -bottom-6 opacity-10">
-                        <span class="material-symbols-rounded" style="font-size: 140px;">local_activity</span>
-                    </div>
-                    <div class="relative z-10">
-                        <span class="bg-yellow-400 text-gray-900 text-[10px] font-bold px-2 py-0.5 rounded-sm mb-3 inline-block">PROMO</span>
-                        <h2 class="text-white text-[19px] font-bold mb-1">Diskon 20% All Item</h2>
-                        <p class="text-white/90 text-[11px] mb-4 font-light">Khusus pemesanan hari ini!</p>
-                        <button class="bg-white text-primary text-[11px] font-bold px-4 py-2.5 rounded-full shadow-sm hover:bg-gray-50 transition-colors">Klaim Sekarang</button>
-                    </div>
-                </div>
-            </div>-->
+    // =================================----------------------------
+    // KATALOG POIN & REWARD (UBAH/TAMBAH MENU HADIAH DI SINI)
+    // =================================----------------------------
+    const INITIAL_REWARDS = [
+      { id: 'r1', name: 'Voucher Diskon Rp 15.000', points: 15000, type: 'Voucher Diskon', desc: 'Potongan harga Rp 15.000 saat checkout', discountAmount: 15000 },
+      { id: 'r2', name: 'Gratis 1 Ruang Seduh Latte', points: 35000, type: 'Gratis Minuman', desc: 'Voucher potongan Rp 38.000 untuk Latte', discountAmount: 38000 },
+      { id: 'r3', name: 'Gantungan Kunci Tumbler Emas', points: 50000, type: 'Merchandise', desc: 'Edisi terbatas Ruang Seduh', discountAmount: 0 },
+      { id: 'r4', name: 'Cashback Rp 50.000 Diskon', points: 45000, type: 'Voucher Diskon', desc: 'Potongan langsung Rp 50.000', discountAmount: 50000 },
+    ];
 
-            <!-- Kategori Pilihan -->
-            <div class="px-5 mb-8">
-                <h2 class="font-bold text-lg text-gray-800 mb-4">Kategori Pilihan</h2>
-                <div class="flex justify-between items-start" id="category-filters">
-                    <button class="category-btn active flex flex-col items-center gap-2 w-[60px]" data-cat="Semua">
-                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
-                            <span class="material-symbols-rounded text-primary text-[26px]">grid_view</span>
-                        </div>
-                        <span class="text-[11px] font-medium text-gray-800">Semua</span>
-                    </button>
-                    <button class="category-btn flex flex-col items-center gap-2 w-[60px]" data-cat="Minuman Coffee">
-                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
-                            <span class="material-symbols-rounded text-primary text-[26px]">local_cafe</span>
-                        </div>
-                        <span class="text-[11px] font-medium text-gray-800">Coffee</span>
-                    </button>
-                    <button class="category-btn flex flex-col items-center gap-2 w-[60px]" data-cat="Minuman Non Coffee">
-                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
-                            <span class="material-symbols-rounded text-primary text-[26px]">local_drink</span>
-                        </div>
-                        <span class="text-[11px] font-medium text-gray-800">Non Coffee</span>
-                    </button>
-                    <button class="category-btn flex flex-col items-center gap-2 w-[60px]" data-cat="Minuman Segar">
-                        <div class="cat-icon-container w-[56px] h-[56px] rounded-full border border-gray-100 bg-white flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300">
-                            <span class="material-symbols-rounded text-primary text-[26px]">eco</span>
-                        </div>
-                        <span class="text-[11px] font-medium text-gray-800">Segar</span>
-                    </button>
-                </div>
-            </div>
+    function App() {
+      const SCRIPT_DATABASE_URL = 'https://script.google.com/macros/s/AKfycbz6yq-lrOJ9Nms8Q5ZYnOEFeNsj3UVO9idulhSrjZIE6kK173kT4_aF0zI5lWFZGystbw/exec';
+      const TELEGRAM_TOKEN = '8993074889:AAHLq5-NSGZxJkEYE6meNnmUKt-kRPW32CE';
+      const TELEGRAM_CHAT_ID = '6085581813';
 
-            <!-- Menu Grid -->
-            <div class="p-5 min-h-[400px]">
-                <h2 class="font-bold text-lg mb-4 text-gray-800" id="section-title">Semua Menu</h2>
-                
-                <!-- Skeleton Container -->
-                <div id="skeleton-container" class="grid grid-cols-2 gap-4">
-                    <!-- Skeletons injected via JS -->
-                </div>
+      const [currentTab, setCurrentTab] = useState('home');
+      const [darkMode, setDarkMode] = useState(false);
 
-                <!-- Product Container -->
-                <div id="product-container" class="grid grid-cols-2 gap-4 hidden">
-                    <!-- Products injected via JS -->
-                </div>
-                
-                <!-- Empty State -->
-                <div id="empty-state" class="hidden flex-col items-center justify-center py-10 text-center">
-                    <span class="material-symbols-rounded text-6xl text-gray-300 mb-3">search_off</span>
-                    <p class="text-gray-500 font-medium">Menu tidak ditemukan</p>
-                </div>
-            </div>
-        </div>
+      const [authMode, setAuthMode] = useState('login'); 
+      const [isLoadingAuth, setIsLoadingAuth] = useState(false);
 
-        <!-- ================= CART PAGE ================= -->
-        <div id="page-cart" class="hidden min-h-screen bg-bg">
-            <div class="bg-white p-5 shadow-sm sticky top-0 z-20">
-                <h1 class="text-xl font-bold text-gray-800 text-center">Keranjang Pesanan</h1>
-            </div>
+      const [currentUser, setCurrentUser] = useState(() => {
+        const saved = localStorage.getItem('rs_current_user');
+        return saved ? JSON.parse(saved) : null;
+      });
 
-            <div id="cart-content" class="p-5">
-                <!-- Cart Items will be injected here -->
-                <div id="cart-items" class="space-y-4 mb-6"></div>
+      const [orders, setOrders] = useState(() => {
+        const saved = localStorage.getItem('rs_orders_list');
+        return saved ? JSON.parse(saved) : [];
+      });
 
-                <!-- Checkout Form -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                    <h3 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <span class="material-symbols-rounded text-primary">edit_document</span> Detail Pengiriman
-                    </h3>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-xs text-gray-500 font-medium mb-1 block">Nama Pembeli *</label>
-                            <input type="text" id="co-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Masukkan nama">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 font-medium mb-1 block">Nomor WhatsApp *</label>
-                            <input type="tel" id="co-phone" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Contoh: 08123456789">
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 font-medium mb-1 block">Metode Pengiriman *</label>
-                            <div class="grid grid-cols-2 gap-3">
-                                <label class="custom-radio cursor-pointer">
-                                    <input type="radio" name="co-method" value="Pickup" class="hidden" checked>
-                                    <div class="border border-gray-200 rounded-xl p-3 text-center text-sm font-medium transition-colors text-gray-600 bg-white">Pickup</div>
-                                </label>
-                                <label class="custom-radio cursor-pointer">
-                                    <input type="radio" name="co-method" value="Delivery" class="hidden">
-                                    <div class="border border-gray-200 rounded-xl p-3 text-center text-sm font-medium transition-colors text-gray-600 bg-white">Delivery</div>
-                                </label>
-                            </div>
-                        </div>
-                        <div id="address-container" class="hidden">
-                            <label class="text-xs text-gray-500 font-medium mb-1 block">Alamat Lengkap *</label>
-                            <textarea id="co-address" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Alamat pengiriman"></textarea>
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 font-medium mb-1 block">Catatan Pesanan (Opsional)</label>
-                            <textarea id="co-note" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-primary text-sm" placeholder="Misal: Jangan lupa sedotan"></textarea>
-                        </div>
-                    </div>
+      const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+      const [menuItems] = useState(INITIAL_MENU);
+      const [rewardsList] = useState(INITIAL_REWARDS);
+      const [cart, setCart] = useState([]);
+      const [selectedCategory, setSelectedCategory] = useState('Semua');
 
-                    <div class="mt-6 border-t border-gray-100 pt-4">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-gray-600 font-medium">Total Belanja</span>
-                            <span class="text-xl font-bold text-primary" id="cart-total-price">Rp0</span>
-                        </div>
-                        <button onclick="checkout()" class="ripple-btn w-full bg-primary text-white font-semibold rounded-xl py-3.5 flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
-                            <span class="material-symbols-rounded">send</span> Checkout via WhatsApp
-                        </button>
-                    </div>
-                </div>
-            </div>
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [sugarLevel, setSugarLevel] = useState('Normal Sugar');
+      const [orderNotes, setOrderNotes] = useState('');
+      const [itemQty, setItemQty] = useState(1);
+      
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [checkoutStep, setCheckoutStep] = useState('cart'); 
+      const [selectedVoucher, setSelectedVoucher] = useState(null);
+      const [showVoucherSelector, setShowVoucherSelector] = useState(false);
 
-            <!-- Empty Cart State -->
-            <div id="empty-cart" class="hidden flex-col items-center justify-center py-20 text-center px-5">
-                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="material-symbols-rounded text-5xl text-gray-400">shopping_cart_off</span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-800">Keranjang Masih Kosong</h3>
-                <p class="text-gray-500 text-sm mt-2 mb-6">Yuk, pilih minuman segar favoritmu sekarang!</p>
-                <button onclick="switchTab('home')" class="bg-primary text-white px-6 py-2.5 rounded-full font-medium shadow-md">Lihat Menu</button>
-            </div>
-        </div>
+      const [activeOrderReceipt, setActiveOrderReceipt] = useState(null);
+      const [scanQRInput, setScanQRInput] = useState('');
+      const [qrModalOpen, setQrModalOpen] = useState(false);
+      const [notification, setNotification] = useState(null);
 
-        <!-- ================= BOTTOM NAVIGATION ================= -->
-        <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t border-gray-100 flex justify-around items-center py-3 px-2 z-40 shadow-[0_-5px_15px_rgba(0,0,0,0.03)] pb-safe rounded-t-2xl">
-            <button onclick="switchTab('home')" class="nav-btn w-1/2 flex flex-col items-center gap-1 text-primary transition-colors">
-                <span class="material-symbols-rounded text-2xl" id="nav-icon-home">home</span>
-                <span class="text-[10px] font-medium">Home</span>
-            </button>
-            <button onclick="switchTab('cart')" class="nav-btn w-1/2 flex flex-col items-center gap-1 text-gray-400 transition-colors relative">
-                <div class="relative">
-                    <span class="material-symbols-rounded text-2xl icon-outlined" id="nav-icon-cart">shopping_cart</span>
-                    <span id="cart-badge" class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
-                </div>
-                <span class="text-[10px] font-medium">Keranjang</span>
-            </button>
-        </div>
+      useEffect(() => {
+        if (currentUser) {
+          localStorage.setItem('rs_current_user', JSON.stringify(currentUser));
+        } else {
+          localStorage.removeItem('rs_current_user');
+        }
+      }, [currentUser]);
 
-        <!-- ================= BOTTOM SHEET (PRODUCT DETAIL) ================= -->
-        <div id="sheet-overlay" class="overlay fixed inset-0 bg-black/50 z-50 max-w-[480px] mx-auto" onclick="closeSheet()"></div>
-        
-        <div id="bottom-sheet" class="bottom-sheet fixed bottom-0 w-full max-w-[480px] bg-white rounded-t-[30px] z-[60] flex flex-col max-h-[85vh] shadow-2xl">
-            <!-- Drag Handle -->
-            <div class="w-full flex justify-center py-3" onclick="closeSheet()">
-                <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
-            </div>
-            
-            <div class="overflow-y-auto px-6 pb-6 no-scrollbar">
-                <div class="relative rounded-2xl overflow-hidden mb-4 bg-gray-100 h-64">
-                    <img id="detail-img" src="" alt="Product" class="w-full h-full object-cover">
-                    <button onclick="closeSheet()" class="absolute top-3 right-3 bg-white/80 backdrop-blur p-1.5 rounded-full text-gray-700 shadow-sm">
-                        <span class="material-symbols-rounded text-xl">close</span>
-                    </button>
-                </div>
+      useEffect(() => {
+        localStorage.setItem('rs_orders_list', JSON.stringify(orders));
+      }, [orders]);
 
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h2 id="detail-name" class="text-xl font-bold text-gray-800">Nama Produk</h2>
-                        <p id="detail-category" class="text-sm text-primary font-medium mt-0.5">Kategori</p>
-                    </div>
-                    <span id="detail-price" class="text-xl font-bold text-gray-800">Rp0</span>
-                </div>
+      // SINKRONISASI KE GOOGLE SHEETS
+      const syncUserToSpreadsheet = async (updatedUser) => {
+        try {
+          await fetch(SCRIPT_DATABASE_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'updateUser',
+              phone: updatedUser.phone,
+              points: updatedUser.points,
+              myVouchers: updatedUser.myVouchers,
+              claimedQRs: updatedUser.claimedQRs
+            })
+          });
+        } catch (err) {
+          console.error('Gagal sync ke spreadsheet:', err);
+        }
+      };
 
-                <hr class="border-gray-100 my-4">
+      const showToast = (message, type = 'success') => {
+        setNotification({ message, type });
+        setTimeout(() => setNotification(null), 3500);
+      };
 
-                <!-- Variations -->
-                <div class="space-y-5">
-                    <!-- Es -->
-                    <div>
-                        <h4 class="font-semibold text-gray-800 text-sm mb-2">Tingkat Es</h4>
-                        <div class="grid grid-cols-3 gap-2">
-                            <label class="custom-radio cursor-pointer">
-                                <input type="radio" name="opt-es" value="Normal" class="hidden" checked>
-                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">Normal</div>
-                            </label>
-                            <label class="custom-radio cursor-pointer">
-                                <input type="radio" name="opt-es" value="Less Ice" class="hidden">
-                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">Less Ice</div>
-                            </label>
-                            <label class="custom-radio cursor-pointer">
-                                <input type="radio" name="opt-es" value="No Ice" class="hidden">
-                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">No Ice</div>
-                            </label>
-                        </div>
-                    </div>
+      // LOGIN / REGISTER SPREADSHEET
+      const handleAuthSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const phone = formData.get('phone').trim();
+        const password = formData.get('password').trim();
 
-                    <!-- Gula -->
-                    <div>
-                        <h4 class="font-semibold text-gray-800 text-sm mb-2">Tingkat Gula</h4>
-                        <div class="grid grid-cols-3 gap-2">
-                            <label class="custom-radio cursor-pointer">
-                                <input type="radio" name="opt-gula" value="Normal" class="hidden" checked>
-                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">Normal</div>
-                            </label>
-                            <label class="custom-radio cursor-pointer">
-                                <input type="radio" name="opt-gula" value="extra sugar" class="hidden">
-                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">extra sugar</div>
-                            </label>
-                            <label class="custom-radio cursor-pointer">
-                                <input type="radio" name="opt-gula" value="No Sugar" class="hidden">
-                                <div class="border border-gray-200 rounded-xl p-2 text-center text-xs font-medium transition-colors text-gray-600 bg-white">No Sugar</div>
-                            </label>
-                        </div>
-                    </div>
+        setIsLoadingAuth(true);
 
-                    <!-- Note -->
-                    <div>
-                        <h4 class="font-semibold text-gray-800 text-sm mb-2">Catatan Tambahan</h4>
-                        <textarea id="detail-note" rows="2" class="w-full border border-gray-200 rounded-xl p-3 text-sm outline-none focus:border-primary bg-gray-50" placeholder="Misal: Jangan terlalu manis"></textarea>
-                    </div>
+        try {
+          if (authMode === 'register') {
+            const name = formData.get('name').trim();
+            const res = await fetch(SCRIPT_DATABASE_URL, {
+              method: 'POST',
+              body: JSON.stringify({ action: 'register', name, phone, password })
+            });
+            const result = await res.json();
 
-                    <!-- Quantity & Add -->
-                    <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
-                        <div class="flex items-center gap-4 bg-gray-50 p-1.5 rounded-full border border-gray-200">
-                            <button onclick="updateQty(-1)" class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-600 active:bg-gray-100">
-                                <span class="material-symbols-rounded text-lg">remove</span>
-                            </button>
-                            <span id="detail-qty" class="font-bold w-4 text-center text-gray-800">1</span>
-                            <button onclick="updateQty(1)" class="w-8 h-8 flex items-center justify-center bg-primary rounded-full shadow-sm text-white active:bg-green-800">
-                                <span class="material-symbols-rounded text-lg">add</span>
-                            </button>
-                        </div>
-                        <button onclick="addToCart()" class="ripple-btn flex-1 ml-4 bg-primary text-white font-semibold py-3 rounded-2xl shadow-lg shadow-green-900/20 active:bg-green-800 transition-colors">
-                            Tambah - <span id="detail-total-price">Rp0</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            if (result.success) {
+              setCurrentUser(result.user);
+              showToast(`Pendaftaran berhasil! Welcome, ${result.user.name} 🎉`);
+              setIsLoginModalOpen(false);
+            } else {
+              showToast(result.message, 'error');
+            }
+          } else {
+            const res = await fetch(SCRIPT_DATABASE_URL, {
+              method: 'POST',
+              body: JSON.stringify({ action: 'login', phone, password })
+            });
+            const result = await res.json();
 
-        <!-- ================= TOAST NOTIFICATION ================= -->
-        <div id="toast" class="toast fixed bottom-20 bg-gray-900/90 backdrop-blur text-white px-5 py-3 rounded-full shadow-xl z-[70] flex items-center gap-2 pointer-events-none max-w-[90%]">
-            <span class="material-symbols-rounded text-green-400 text-xl">check_circle</span>
-            <span id="toast-msg" class="text-sm font-medium">Berhasil ditambahkan</span>
-        </div>
+            if (result.success) {
+              setCurrentUser(result.user);
+              showToast(`Login Berhasil! Welcome back, ${result.user.name} 👋`);
+              setIsLoginModalOpen(false);
+            } else {
+              showToast(result.message, 'error');
+            }
+          }
+        } catch (error) {
+          showToast('Gagal terhubung ke Database Spreadsheet', 'error');
+        } finally {
+          setIsLoadingAuth(false);
+        }
+      };
 
-        <!-- Floating WhatsApp Chat -->
-        <a href="https://wa.me/6285351708411" target="_blank" class="fixed bottom-24 right-4 md:right-[calc(50vw-220px)] w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(37,211,102,0.4)] z-[45] ripple-btn hover:scale-105 transition-transform">
-            <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.245 3.487 5.236 3.487 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.312 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-        </a>
+      const handleLogout = () => {
+        setCurrentUser(null);
+        setSelectedVoucher(null);
+        showToast('Anda telah keluar dari akun.');
+      };
 
-    </div>
+      const memberLevel = useMemo(() => {
+        const pts = currentUser ? currentUser.points : 0;
+        if (pts >= 1000) return { name: 'Platinum', badge: 'bg-yellow-500 text-slate-900', color: 'from-amber-200 via-yellow-400 to-amber-600' };
+        if (pts >= 500) return { name: 'Gold', badge: 'bg-amber-500 text-white', color: 'from-amber-400 to-yellow-600' };
+        return { name: 'Silver', badge: 'bg-slate-400 text-white', color: 'from-slate-300 to-slate-400' };
+      }, [currentUser]);
 
-    <script>
-        // Data Minuman (Mirip JSON Data)
-        const products = [
-            // NON COFFEE
-            { id: 'nc1', category: 'Minuman Non Coffee', name: 'Coklat Premium', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/3189ff5cacea207652.png' },
-            { id: 'nc2', category: 'Minuman Non Coffee', name: 'Cookies and Cream', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/e4258374150e997870.png' },
-            { id: 'nc3', category: 'Minuman Non Coffee', name: 'Green Tea', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/e84da2567301199651.png' },
-            { id: 'nc4', category: 'Minuman Non Coffee', name: 'Thai Tea', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/9ef179c7099c922953.png' },
-            { id: 'nc5', category: 'Minuman Non Coffee', name: 'Matcha Premium', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/75fa7407927c282746.png' },
-            
-            // SEGAR
-            
-            { id: 'sg1', category: 'Minuman Segar', name: 'Sunkist Original', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/69be9192a3dd403218.png' },
-            { id: 'sg2', category: 'Minuman Segar', name: 'Sunkist Madu', price: 17000, img: 'https://images.bukaolshop.com/hosting/38154/9054a709a3ba416287.png' },
-            { id: 'sg3', category: 'Minuman Segar', name: 'Sunkist Yakult', price: 17000, img: 'https://images.bukaolshop.com/hosting/38154/4b0a947fb743823248.png' },
-            { id: 'sg4', category: 'Minuman Segar', name: 'Limonada Fresca', price: 10000, img: 'https://images.bukaolshop.com/hosting/38154/c1d6d3508153784226.png' },
-            { id: 'sg5', category: 'Minuman Segar', name: 'Peach Tea', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/2f7709ac229c539346.png' },
-            { id: 'sg6', category: 'Minuman Segar', name: 'Jeruk Peras', price: 10000, img: 'https://images.bukaolshop.com/hosting/38154/2eb01ccfbe56865906.png' },
+      const handleOpenDetail = (product) => {
+        setSelectedProduct(product);
+        setSugarLevel('Normal Sugar');
+        setOrderNotes('');
+        setItemQty(1);
+      };
 
-            // COFFEE
-            { id: 'cf1', category: 'Minuman Coffee', name: 'Mocha Intenso', price: 18000, img: 'https://images.bukaolshop.com/hosting/38154/08b5850b46db416355.png' },
-            { id: 'cf2', category: 'Minuman Coffee', name: 'Kopi Gula Aren', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/7962862d9d07489063.png' },
-            { id: 'cf3', category: 'Minuman Coffee', name: 'Black Bee Coffee', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/84a2312e5226802454.png' },
-            { id: 'cf4', category: 'Minuman Coffee', name: 'Coffee Butterscotch', price: 15000, img: 'https://images.bukaolshop.com/hosting/38154/8dd5ab18c9b1471610.png' }
-        ];
-
-        // State Variables
-        let cart = JSON.parse(localStorage.getItem('ruangseduh_cart')) || [];
-        let activeCategory = 'Semua';
-        let searchQuery = '';
-        let selectedProduct = null;
-        let currentQty = 1;
-        const phoneTarget = '6285351708411';
-
-        // Helper: Format Rupiah
-        const formatRp = (angka) => {
-            return 'Rp' + angka.toLocaleString('id-ID');
+      const handleAddToCart = () => {
+        if (!selectedProduct) return;
+        const cartItem = {
+          cartItemId: Date.now().toString(),
+          productId: selectedProduct.id,
+          name: selectedProduct.name,
+          price: selectedProduct.price,
+          image: selectedProduct.image,
+          sugarLevel: sugarLevel,
+          notes: orderNotes,
+          qty: itemQty
         };
 
-        window.onload = () => {
-            // Hilangkan Loader
-            setTimeout(() => {
-                document.getElementById('startup-loader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('startup-loader').style.display = 'none';
-                    renderSkeletons();
-                    // Simulasi loading data
-                    setTimeout(() => {
-                        renderMenu();
-                        updateCartBadge();
-                    }, 800);
-                }, 500);
-            }, 1000);
+        setCart((prev) => {
+          const existingIdx = prev.findIndex(
+            i => i.productId === cartItem.productId && i.sugarLevel === cartItem.sugarLevel && i.notes === cartItem.notes
+          );
+          if (existingIdx > -1) {
+            const updated = [...prev];
+            updated[existingIdx].qty += itemQty;
+            return updated;
+          }
+          return [...prev, cartItem];
+        });
 
-            setupRippleEffect();
-            setupEventListeners();
+        setSelectedProduct(null);
+        showToast(`${itemQty}x "${selectedProduct.name}" ditambahkan ke keranjang!`);
+      };
+
+      const updateCartQty = (cartItemId, delta) => {
+        setCart((prev) => prev.map(item => {
+          if (item.cartItemId === cartItemId) {
+            const newQty = item.qty + delta;
+            return newQty > 0 ? { ...item, qty: newQty } : null;
+          }
+          return item;
+        }).filter(Boolean));
+      };
+
+      const totalCartCount = useMemo(() => cart.reduce((sum, item) => sum + item.qty, 0), [cart]);
+      const subtotalCart = useMemo(() => cart.reduce((sum, item) => sum + (item.price * item.qty), 0), [cart]);
+
+      const discountAmount = useMemo(() => {
+        if (!selectedVoucher) return 0;
+        return selectedVoucher.discountAmount || 0;
+      }, [selectedVoucher]);
+
+      const finalTotalAmount = useMemo(() => Math.max(0, subtotalCart - discountAmount), [subtotalCart, discountAmount]);
+
+      const sendTelegramNotification = async (order) => {
+        if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) return;
+
+        const itemsText = order.items.map(item => (
+          `• *${item.qty}x ${item.name}*\n  _Gula: ${item.sugarLevel}_${item.notes ? `\n  _Catatan: ${item.notes}_` : ''}`
+        )).join('\n');
+
+        const message = `🚨 *PESANAN BARU RUANG SEDUH!* ☕\n\n` +
+          `*No. Pesanan:* \`${order.orderNo}\`\n` +
+          `*Nama:* ${order.customerName}\n` +
+          `*No. HP:* ${order.customerPhone}\n` +
+          `*Metode Bayar:* ${order.paymentMethod}\n\n` +
+          `*Detail Minuman:*\n${itemsText}\n\n` +
+          `-----------------------------------\n` +
+          `*Subtotal:* Rp ${order.subtotal.toLocaleString('id-ID')}\n` +
+          (order.discountAmount > 0 ? `*Diskon:* -Rp ${order.discountAmount.toLocaleString('id-ID')} (${order.appliedVoucher})\n` : '') +
+          `*TOTAL:* *Rp ${order.totalAmount.toLocaleString('id-ID')}*\n` +
+          `-----------------------------------\n` +
+          `📌 *Status:* ${order.status}`;
+
+        try {
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN.trim()}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID.trim(),
+              text: message,
+              parse_mode: 'Markdown'
+            })
+          });
+        } catch (error) {
+          console.error("Gagal mengirimkan notifikasi Telegram:", error);
+        }
+      };
+
+      const handleProcessCheckout = async () => {
+        if (cart.length === 0) return;
+
+        if (!currentUser) {
+          setIsCartOpen(false);
+          setIsLoginModalOpen(true);
+          showToast('Silakan login / daftar terlebih dahulu untuk checkout', 'error');
+          return;
+        }
+
+        const orderNo = `RS-${Math.floor(100000 + Math.random() * 900000)}`;
+        const qrReceiptCode = `QR-POINT-${orderNo}-${Date.now().toString().slice(-4)}`;
+        const potentialPoints = Math.floor(finalTotalAmount / 1000);
+
+        const newOrder = {
+          orderNo, customerName: currentUser.name, customerPhone: currentUser.phone,
+          items: cart, subtotal: subtotalCart, discountAmount, appliedVoucher: selectedVoucher ? selectedVoucher.name : null,
+          totalAmount: finalTotalAmount, paymentMethod: 'Bayar di Kasir', status: 'Menunggu Konfirmasi',
+          createdAt: new Date().toISOString(), qrReceiptCode, pointsEarned: potentialPoints, qrClaimed: false
         };
 
-        function setupEventListeners() {
-            // Filter Kategori
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const targetBtn = e.currentTarget;
-                    
-                    document.querySelectorAll('.category-btn').forEach(b => {
-                        b.classList.remove('active');
-                    });
-                    
-                    targetBtn.classList.add('active');
-                    
-                    activeCategory = targetBtn.getAttribute('data-cat');
-                    document.getElementById('section-title').textContent = activeCategory === 'Semua' ? 'Semua Menu' : activeCategory;
-                    renderMenu();
-                });
-            });
-
-            // Search
-            document.getElementById('search-input').addEventListener('input', (e) => {
-                searchQuery = e.target.value.toLowerCase();
-                renderMenu();
-            });
-
-            // Delivery Method Toggle
-            document.getElementsByName('co-method').forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    const addressContainer = document.getElementById('address-container');
-                    if(e.target.value === 'Delivery') {
-                        addressContainer.classList.remove('hidden');
-                    } else {
-                        addressContainer.classList.add('hidden');
-                    }
-                });
-            });
+        if (selectedVoucher && selectedVoucher.id) {
+          const updatedUser = {
+            ...currentUser,
+            myVouchers: (currentUser.myVouchers || []).filter(v => v.id !== selectedVoucher.id)
+          };
+          setCurrentUser(updatedUser);
+          syncUserToSpreadsheet(updatedUser);
         }
 
-        // Animasi Ripple untuk tombol
-        function setupRippleEffect() {
-            document.addEventListener('click', function(e) {
-                const target = e.target.closest('.ripple-btn');
-                if (!target) return;
+        sendTelegramNotification(newOrder);
 
-                const rect = target.getBoundingClientRect();
-                const d = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - d/2;
-                const y = e.clientY - rect.top - d/2;
-                
-                const ripple = document.createElement('span');
-                ripple.style.width = ripple.style.height = `${d}px`;
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-                ripple.classList.add('ripple');
-                
-                target.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
-            });
+        setOrders((prev) => [newOrder, ...prev]);
+        setActiveOrderReceipt(newOrder);
+        setCart([]);
+        setSelectedVoucher(null);
+        setIsCartOpen(false);
+        setCheckoutStep('cart');
+        showToast(`Pesanan ${orderNo} berhasil dibuat! ☕`);
+      };
+
+      const handleClaimQR = (qrCodeToScan) => {
+        if (!currentUser) {
+          setIsLoginModalOpen(true);
+          showToast('Silakan login terlebih dahulu untuk klaim poin', 'error');
+          return;
         }
 
-        function renderSkeletons() {
-            const container = document.getElementById('skeleton-container');
-            const pContainer = document.getElementById('product-container');
-            container.innerHTML = '';
-            
-            for(let i=0; i<6; i++) {
-                container.innerHTML += `
-                    <div class="bg-white rounded-[20px] p-3 shadow-sm border border-gray-50">
-                        <div class="skeleton h-32 w-full rounded-xl mb-3"></div>
-                        <div class="skeleton h-4 w-3/4 rounded mb-2"></div>
-                        <div class="skeleton h-4 w-1/2 rounded mb-3"></div>
-                        <div class="skeleton h-8 w-full rounded-lg"></div>
-                    </div>
-                `;
-            }
-            container.style.display = 'grid';
-            pContainer.style.display = 'none';
+        const code = qrCodeToScan || scanQRInput;
+        if (!code) return showToast('Masukkan kode QR struk terlebih dahulu', 'error');
+
+        const targetOrderIndex = orders.findIndex(o => o.qrReceiptCode === code);
+        if (targetOrderIndex === -1) return showToast('Kode QR Struk tidak valid!', 'error');
+
+        const targetOrder = orders[targetOrderIndex];
+        if (targetOrder.qrClaimed || (currentUser.claimedQRs && currentUser.claimedQRs.includes(code))) {
+          return showToast('Kode QR ini sudah pernah dipindai!', 'error');
         }
 
-        function renderMenu() {
-            const container = document.getElementById('product-container');
-            const sContainer = document.getElementById('skeleton-container');
-            const emptyState = document.getElementById('empty-state');
-            
-            sContainer.style.display = 'none';
-            container.innerHTML = '';
-            
-            const filtered = products.filter(p => {
-                const matchCat = activeCategory === 'Semua' || p.category === activeCategory;
-                const matchSearch = p.name.toLowerCase().includes(searchQuery);
-                return matchCat && matchSearch;
-            });
+        const earned = targetOrder.pointsEarned || Math.floor(targetOrder.totalAmount / 1000);
+        const updatedUser = {
+          ...currentUser,
+          points: currentUser.points + earned,
+          claimedQRs: [...(currentUser.claimedQRs || []), code]
+        };
 
-            if(filtered.length === 0) {
-                container.style.display = 'none';
-                emptyState.style.display = 'flex';
-                return;
-            }
+        setCurrentUser(updatedUser);
+        syncUserToSpreadsheet(updatedUser);
 
-            container.style.display = 'grid';
-            emptyState.style.display = 'none';
+        const updatedOrders = [...orders];
+        updatedOrders[targetOrderIndex].qrClaimed = true;
+        setOrders(updatedOrders);
 
-            filtered.forEach((p, index) => {
-                // Menambahkan Tag PROMO / BEST seperti di gambar
-                let tagHtml = '';
-                if (index === 0) {
-                    tagHtml = '<div class="absolute top-0 right-3 bg-yellow-400 text-gray-900 text-[9px] font-bold px-2 py-1 rounded-b flex items-center gap-1 shadow-sm z-10"><span class="material-symbols-rounded text-[11px]">workspace_premium</span>BEST</div>';
-                } else if (index === 1) {
-                    tagHtml = '<div class="absolute top-0 left-3 bg-red-500 text-white text-[9px] font-bold px-2 py-1 rounded-b flex items-center gap-1 shadow-sm z-10"><span class="material-symbols-rounded text-[11px]">sell</span>PROMO</div>';
-                }
+        setScanQRInput('');
+        setQrModalOpen(false);
+        showToast(`Selamat! +${earned} Poin ditambahkan ke akun Anda. 🎉`);
+      };
 
-                container.innerHTML += `
-                    <div class="product-card bg-white rounded-[20px] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 cursor-pointer flex flex-col h-full relative" onclick="openProductDetail('${p.id}')">
-                        ${tagHtml}
-                        <div class="w-full h-[140px] bg-gray-100 relative">
-                            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover">
+      const handleRedeemReward = (reward) => {
+        if (!currentUser) {
+          setIsLoginModalOpen(true);
+          showToast('Silakan login terlebih dahulu untuk menukarkan poin', 'error');
+          return;
+        }
+
+        if (currentUser.points < reward.points) {
+          showToast('Poin Anda tidak mencukupi untuk hadiah ini!', 'error');
+          return;
+        }
+
+        const newVoucher = {
+          id: `v_reward_${Date.now()}`,
+          name: reward.name,
+          code: `RW-${Math.floor(1000 + Math.random() * 9000)}`,
+          discountAmount: reward.discountAmount || 15000,
+          type: 'fixed'
+        };
+
+        const updatedUser = {
+          ...currentUser,
+          points: currentUser.points - reward.points,
+          myVouchers: [...(currentUser.myVouchers || []), newVoucher]
+        };
+
+        setCurrentUser(updatedUser);
+        syncUserToSpreadsheet(updatedUser);
+        showToast(`Berhasil menukarkan "${reward.name}"! Voucher tersimpan.`);
+      };
+
+      return (
+        <div className={`min-h-screen ${darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-800'} transition-colors duration-200 font-sans pb-28 md:pb-8 relative`}>
+          
+          {notification && (
+            <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl text-white font-medium animate-bounce ${notification.type === 'error' ? 'bg-rose-600' : 'bg-[#0B8F5A]'}`}>
+              <Sparkles className="w-5 h-5 text-amber-300" />
+              <span>{notification.message}</span>
+            </div>
+          )}
+
+          {/* HEADER */}
+          <header className={`sticky top-0 z-30 backdrop-blur-md border-b ${darkMode ? 'bg-slate-900/90 border-slate-800' : 'bg-white/90 border-slate-200'} px-4 py-3 shadow-sm`}>
+            <div className="max-w-6xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-3 cursor-pointer select-none group">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0B8F5A] to-emerald-400 flex items-center justify-center text-white shadow-md">
+                  <Coffee className="w-6 h-6 text-amber-200" />
+                </div>
+                <div>
+                  <h1 className="font-extrabold text-xl tracking-tight text-[#0B8F5A] leading-none flex items-center gap-1.5">
+                    RUANG SEDUH <span className="text-[10px] bg-amber-500/20 text-amber-600 px-1.5 py-0.5 rounded font-bold uppercase">Premium</span>
+                  </h1>
+                  <p className="text-[11px] text-slate-400 font-medium tracking-wide">Coffee & Artisanal Brew</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {!currentUser ? (
+                  <button onClick={() => { setAuthMode('login'); setIsLoginModalOpen(true); }} className="bg-[#0B8F5A] text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow">
+                    <LogIn className="w-4 h-4 text-amber-300" /> <span>Login / Daftar</span>
+                  </button>
+                ) : (
+                  <div className="hidden sm:flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                    <User className="w-4 h-4 text-[#0B8F5A]" /> <span className="text-xs font-bold text-[#0B8F5A]">{currentUser.name}</span>
+                  </div>
+                )}
+
+                <button onClick={() => setDarkMode(!darkMode)} className={`p-2.5 rounded-xl border ${darkMode ? 'bg-slate-800 border-slate-700 text-amber-400' : 'bg-slate-100 border-slate-200 text-slate-600'}`}>
+                  {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="max-w-6xl mx-auto px-4 pt-4">
+            <div>
+              <nav className="hidden md:flex items-center justify-between bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 mb-6 shadow-sm">
+                <div className="flex gap-1">
+                  {[
+                    { id: 'home', label: 'Beranda', icon: Coffee },
+                    { id: 'menu', label: 'Menu Minuman', icon: ShoppingBag },
+                    { id: 'reward', label: 'Reward Member', icon: Gift },
+                    { id: 'orders', label: 'Pesanan Saya', icon: Clock },
+                    { id: 'profile', label: 'Profil Member', icon: User }
+                  ].map(tab => (
+                    <button key={tab.id} onClick={() => setCurrentTab(tab.id)} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition ${currentTab === tab.id ? 'bg-[#0B8F5A] text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                      <tab.icon className="w-4 h-4" /> {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                <button onClick={() => { setIsCartOpen(true); setCheckoutStep('cart'); }} className="flex items-center gap-2 bg-amber-500 text-slate-900 px-4 py-2.5 rounded-xl font-bold text-sm shadow">
+                  <ShoppingCart className="w-4 h-4" /> <span>Keranjang</span>
+                  {totalCartCount > 0 && <span className="bg-slate-900 text-white text-xs px-2 py-0.5 rounded-full font-black">{totalCartCount}</span>}
+                </button>
+              </nav>
+
+              {currentTab === 'home' && (
+                <div className="space-y-6">
+                  <div className={`relative overflow-hidden rounded-3xl p-6 bg-gradient-to-r ${memberLevel.color} text-slate-900 shadow-xl`}>
+                    <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <span className={`text-xs font-black uppercase px-2.5 py-1 rounded-full ${memberLevel.badge}`}>Member {memberLevel.name}</span>
+                        <h2 className="text-2xl font-bold tracking-tight mt-2">{currentUser ? `Halo, ${currentUser.name}! 👋` : 'Selamat Datang di Ruang Seduh! 👋'}</h2>
+                        <p className="text-sm opacity-90 mt-0.5">Nikmati racikan kopi terbaik & kumpulkan poin reward.</p>
+                      </div>
+
+                      <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl flex items-center justify-between md:justify-end gap-6 shadow-sm">
+                        <div>
+                          <p className="text-xs font-semibold text-slate-500 uppercase">Saldo Poin Anda</p>
+                          <p className="text-3xl font-extrabold text-[#0B8F5A]">{currentUser ? currentUser.points : 0} <span className="text-sm font-bold text-slate-600">PTS</span></p>
                         </div>
-                        <div class="p-3.5 bg-white flex-1 flex flex-col">
-                            <h3 class="font-bold text-gray-800 text-[13px] leading-tight mb-1 truncate">${p.name}</h3>
-                            <p class="text-[10px] text-gray-400 mb-2 truncate">${p.category}</p>
-                            <p class="font-bold text-primary text-[15px] mt-auto">${formatRp(p.price)}</p>
-                        </div>
+                        <button onClick={() => setCurrentTab('reward')} className="bg-[#0B8F5A] text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow flex items-center gap-1.5">
+                          <Gift className="w-4 h-4 text-amber-300" /> Tukar Hadiah
+                        </button>
+                      </div>
                     </div>
-                `;
-            });
-        }
+                  </div>
 
-        function openProductDetail(id) {
-            selectedProduct = products.find(p => p.id === id);
-            if(!selectedProduct) return;
+                  {!currentUser && (
+                    <div className="bg-emerald-900 text-white p-5 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg border border-emerald-700">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold"><UserCheck className="w-6 h-6" /></div>
+                        <div>
+                          <h3 className="font-bold text-sm text-amber-300">Belum Punya Akun Member?</h3>
+                          <p className="text-xs text-slate-200 mt-0.5">Daftar akun sekarang untuk mendapatkan +100 Poin Selamat Datang!</p>
+                        </div>
+                      </div>
+                      <button onClick={() => { setAuthMode('register'); setIsLoginModalOpen(true); }} className="bg-amber-500 text-slate-900 px-4 py-2.5 rounded-xl text-xs font-black shadow whitespace-nowrap">Daftar Sekarang</button>
+                    </div>
+                  )}
 
-            // Reset state
-            currentQty = 1;
-            document.getElementById('detail-qty').textContent = currentQty;
-            document.querySelector('input[name="opt-es"][value="Normal"]').checked = true;
-            document.querySelector('input[name="opt-gula"][value="Normal"]').checked = true;
-            document.getElementById('detail-note').value = '';
+                  <div className="grid grid-cols-3 gap-3">
+                    <button onClick={() => setCurrentTab('menu')} className="p-4 rounded-2xl bg-[#0B8F5A] text-white flex flex-col items-center gap-2 shadow"><Coffee className="w-6 h-6 text-amber-200" /><span className="text-xs font-bold">Pesan Minuman</span></button>
+                    <button onClick={() => setQrModalOpen(true)} className="p-4 rounded-2xl bg-amber-500 text-slate-900 flex flex-col items-center gap-2 shadow"><QrCode className="w-6 h-6" /><span className="text-xs font-bold">Scan QR Poin</span></button>
+                    <button onClick={() => setCurrentTab('reward')} className="p-4 rounded-2xl bg-slate-800 text-white flex flex-col items-center gap-2 shadow"><Gift className="w-6 h-6 text-amber-400" /><span className="text-xs font-bold">Poin & Reward</span></button>
+                  </div>
 
-            // Update UI
-            document.getElementById('detail-img').src = selectedProduct.img;
-            document.getElementById('detail-name').textContent = selectedProduct.name;
-            document.getElementById('detail-category').textContent = selectedProduct.category;
-            document.getElementById('detail-price').textContent = formatRp(selectedProduct.price);
-            updateSheetTotal();
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-bold">Menu Minuman Favorit</h3>
+                      <button onClick={() => setCurrentTab('menu')} className="text-xs font-bold text-[#0B8F5A] flex items-center gap-1 hover:underline">Lihat Semua <ChevronRight className="w-4 h-4" /></button>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                      {menuItems.slice(0, 4).map(item => (
+                        <div key={item.id} onClick={() => handleOpenDetail(item)} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm cursor-pointer flex flex-col justify-between">
+                          <img src={item.image} alt={item.name} className="w-full h-28 sm:h-36 object-cover" />
+                          <div className="p-3">
+                            <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-full">{item.category}</span>
+                            <h4 className="font-bold text-xs sm:text-sm mt-1 line-clamp-1">{item.name}</h4>
+                            <p className="text-xs font-extrabold text-[#0B8F5A] mt-1">Rp {item.price.toLocaleString('id-ID')}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
-            // Show sheet
-            document.getElementById('sheet-overlay').classList.add('open');
-            document.getElementById('bottom-sheet').classList.add('open');
-        }
+              {currentTab === 'menu' && (
+                <div className="space-y-5">
+                  <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                    {['Semua', 'Coffee', 'Non Coffee', 'Fresh Drink', 'Cemilan'].map(cat => (
+                      <button key={cat} onClick={() => setSelectedCategory(cat)} className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${selectedCategory === cat ? 'bg-[#0B8F5A] text-white shadow' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border'}`}>
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
 
-        function closeSheet() {
-            document.getElementById('sheet-overlay').classList.remove('open');
-            document.getElementById('bottom-sheet').classList.remove('open');
-            selectedProduct = null;
-        }
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                    {menuItems.filter(item => selectedCategory === 'Semua' || item.category === selectedCategory).map(product => (
+                      <div key={product.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
+                        <div>
+                          <div className="relative overflow-hidden h-28 sm:h-36">
+                            <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition" />
+                            <span className="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-md text-amber-400 text-[9px] font-bold px-2 py-0.5 rounded-full">{product.category}</span>
+                          </div>
+                          <div className="p-3">
+                            <h4 className="font-bold text-xs sm:text-sm line-clamp-1">{product.name}</h4>
+                            <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{product.desc}</p>
+                          </div>
+                        </div>
+                        <div className="p-3 pt-0 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/50 mt-1">
+                          <span className="text-xs sm:text-sm font-extrabold text-[#0B8F5A]">Rp {product.price.toLocaleString('id-ID')}</span>
+                          <button onClick={() => handleOpenDetail(product)} className="bg-[#0B8F5A] text-white p-2 rounded-xl shadow"><Plus className="w-4 h-4" /></button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-        function updateQty(change) {
-            currentQty += change;
-            if(currentQty < 1) currentQty = 1;
-            document.getElementById('detail-qty').textContent = currentQty;
-            updateSheetTotal();
-        }
+              {currentTab === 'reward' && (
+                <div className="space-y-6">
+                  <div className="bg-slate-900 text-white p-6 rounded-3xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+                    <div>
+                      <span className="text-xs text-amber-400 font-bold uppercase tracking-widest">Program Loyalitas Member</span>
+                      <h2 className="text-2xl font-bold mt-1">Tukar Poin Reward</h2>
+                      <p className="text-xs text-slate-400 mt-1">Dapatkan 1 Poin setiap transaksi Rp 1.000 dengan memindai QR pada struk.</p>
+                    </div>
 
-        function updateSheetTotal() {
-            if(selectedProduct) {
-                document.getElementById('detail-total-price').textContent = formatRp(selectedProduct.price * currentQty);
-            }
-        }
+                    <div className="flex items-center gap-4 bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
+                      <div className="text-right">
+                        <span className="text-xs text-slate-400 block font-semibold">Total Poin Anda</span>
+                        <span className="text-3xl font-black text-amber-400">{currentUser ? currentUser.points : 0} <span className="text-sm font-bold text-slate-300">PTS</span></span>
+                      </div>
+                      <button onClick={() => setQrModalOpen(true)} className="bg-[#0B8F5A] text-white p-3 rounded-xl shadow-lg"><QrCode className="w-6 h-6" /></button>
+                    </div>
+                  </div>
 
-        function addToCart() {
-            if(!selectedProduct) return;
-
-            const es = document.querySelector('input[name="opt-es"]:checked').value;
-            const gula = document.querySelector('input[name="opt-gula"]:checked').value;
-            const note = document.getElementById('detail-note').value.trim();
-
-            // Cek apakah item sama persis sudah ada
-            const existingIndex = cart.findIndex(item => 
-                item.id === selectedProduct.id && 
-                item.es === es && 
-                item.gula === gula && 
-                item.note === note
-            );
-
-            if(existingIndex >= 0) {
-                cart[existingIndex].qty += currentQty;
-            } else {
-                cart.push({
-                    id: selectedProduct.id,
-                    name: selectedProduct.name,
-                    price: selectedProduct.price,
-                    img: selectedProduct.img,
-                    es: es,
-                    gula: gula,
-                    note: note,
-                    qty: currentQty
-                });
-            }
-
-            saveCart();
-            closeSheet();
-            showToast('Berhasil masuk keranjang');
-        }
-
-        function saveCart() {
-            localStorage.setItem('ruangseduh_cart', JSON.stringify(cart));
-            updateCartBadge();
-            if(document.getElementById('page-cart').classList.contains('block')) {
-                renderCart();
-            }
-        }
-
-        function updateCartBadge() {
-            const badge = document.getElementById('cart-badge');
-            const headerBadge = document.getElementById('header-cart-badge');
-            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-            
-            if(totalItems > 0) {
-                const text = totalItems > 99 ? '99+' : totalItems;
-                badge.textContent = text;
-                badge.classList.remove('hidden');
-                if(headerBadge) {
-                    headerBadge.textContent = text;
-                    headerBadge.classList.remove('hidden');
-                }
-            } else {
-                badge.classList.add('hidden');
-                if(headerBadge) {
-                    headerBadge.classList.add('hidden');
-                }
-            }
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            saveCart();
-        }
-
-        function updateCartQty(index, change) {
-            cart[index].qty += change;
-            if(cart[index].qty < 1) {
-                removeFromCart(index);
-            } else {
-                saveCart();
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2500);
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cart-items');
-            const contentArea = document.getElementById('cart-content');
-            const emptyArea = document.getElementById('empty-cart');
-            const totalPriceEl = document.getElementById('cart-total-price');
-
-            if(cart.length === 0) {
-                contentArea.classList.add('hidden');
-                emptyArea.classList.remove('hidden');
-                emptyArea.classList.add('flex');
-                return;
-            }
-
-            contentArea.classList.remove('hidden');
-            emptyArea.classList.add('hidden');
-            emptyArea.classList.remove('flex');
-            
-            container.innerHTML = '';
-            let total = 0;
-
-            cart.forEach((item, index) => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-
-                let optionsText = `Es: ${item.es} | Gula: ${item.gula}`;
-                if(item.note) optionsText += ` | Catatan: ${item.note}`;
-
-                container.innerHTML += `
-                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex gap-3 relative">
-                        <img src="${item.img}" alt="${item.name}" class="w-20 h-20 rounded-xl object-cover bg-gray-100">
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-gray-800 text-sm leading-tight pr-8">${item.name}</h4>
-                            <p class="text-[11px] text-gray-500 mt-1 leading-snug">${optionsText}</p>
-                            <div class="flex justify-between items-end mt-2">
-                                <span class="font-bold text-primary text-sm">${formatRp(item.price)}</span>
-                                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-1 border border-gray-100">
-                                    <button onclick="updateCartQty(${index}, -1)" class="w-6 h-6 flex items-center justify-center bg-white rounded text-gray-600 shadow-sm active:bg-gray-100">
-                                        <span class="material-symbols-rounded text-sm">${item.qty === 1 ? 'delete' : 'remove'}</span>
-                                    </button>
-                                    <span class="font-bold text-xs w-4 text-center text-gray-800">${item.qty}</span>
-                                    <button onclick="updateCartQty(${index}, 1)" class="w-6 h-6 flex items-center justify-center bg-primary rounded text-white shadow-sm active:bg-green-800">
-                                        <span class="material-symbols-rounded text-sm">add</span>
-                                    </button>
-                                </div>
+                  {/* KATALOG POIN REWARD */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {rewardsList.map(reward => {
+                      const isEnough = currentUser && currentUser.points >= reward.points;
+                      return (
+                        <div key={reward.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold"><Gift className="w-6 h-6" /></div>
+                            <div>
+                              <span className="text-[10px] font-bold uppercase text-slate-400">{reward.type}</span>
+                              <h4 className="font-bold text-sm leading-snug">{reward.name}</h4>
+                              <p className="text-xs text-slate-500 mt-0.5">{reward.desc}</p>
+                              <span className="inline-block mt-2 text-xs font-black text-[#0B8F5A] bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">{reward.points} Poin</span>
                             </div>
+                          </div>
+
+                          <button onClick={() => handleRedeemReward(reward)} disabled={!isEnough} className={`px-4 py-2 rounded-xl font-bold text-xs shadow transition ${isEnough ? 'bg-amber-500 text-slate-900' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}>
+                            {isEnough ? 'Tukar Hadiah' : 'Poin Kurang'}
+                          </button>
                         </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {currentTab === 'orders' && (
+                <div className="space-y-4">
+                  <h2 className="text-xl font-bold flex items-center gap-2"><Clock className="w-5 h-5 text-[#0B8F5A]" /> Riwayat Pesanan Saya</h2>
+                  {!currentUser ? (
+                    <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 space-y-3">
+                      <UserCheck className="w-12 h-12 mx-auto text-slate-300" />
+                      <p className="font-bold text-slate-600">Belum Login</p>
+                      <button onClick={() => setIsLoginModalOpen(true)} className="bg-[#0B8F5A] text-white px-4 py-2 rounded-xl text-xs font-bold">Login Sekarang</button>
                     </div>
-                `;
-            });
+                  ) : orders.filter(o => o.customerPhone === currentUser.phone).length === 0 ? (
+                    <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200"><Coffee className="w-12 h-12 mx-auto text-slate-300 mb-2" /><p className="font-bold text-slate-500">Belum Ada Pesanan</p></div>
+                  ) : (
+                    orders.filter(o => o.customerPhone === currentUser.phone).map(order => (
+                      <div key={order.orderNo} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-3">
+                        <div className="flex justify-between items-center border-b pb-2">
+                          <span className="font-mono text-xs font-black text-amber-600">{order.orderNo}</span>
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">{order.status}</span>
+                        </div>
+                        <p className="text-xs text-slate-500">{order.items?.map(i => `${i.qty}x ${i.name}`).join(', ')}</p>
+                        <div className="flex justify-between items-center pt-2">
+                          <span className="text-sm font-black text-[#0B8F5A]">Rp {order.totalAmount?.toLocaleString('id-ID')}</span>
+                          <button onClick={() => setActiveOrderReceipt(order)} className="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1"><QrCode className="w-3.5 h-3.5 text-amber-500" /> Struk QR</button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
 
-            totalPriceEl.textContent = formatRp(total);
-        }
+              {currentTab === 'profile' && (
+                <div className="space-y-6 max-w-xl mx-auto">
+                  {currentUser ? (
+                    <div className="space-y-6">
+                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 text-center shadow-md relative overflow-hidden">
+                        <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#0B8F5A] to-emerald-400 mx-auto flex items-center justify-center text-white text-2xl font-black shadow-lg">{currentUser.name.charAt(0)}</div>
+                        <h2 className="text-xl font-bold mt-3">{currentUser.name}</h2>
+                        <p className="text-xs text-slate-500">{currentUser.phone}</p>
 
-        function switchTab(tab) {
-            const pageHome = document.getElementById('page-home');
-            const pageCart = document.getElementById('page-cart');
-            const navHome = document.getElementById('nav-icon-home');
-            const navCart = document.getElementById('nav-icon-cart');
-            const btnHome = navHome.parentElement;
-            const btnCart = navCart.parentElement;
+                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-600 font-bold text-xs border border-amber-500/20">
+                          <Award className="w-4 h-4" /> Tier Level: Member {memberLevel.name}
+                        </div>
 
-            if(tab === 'home') {
-                pageHome.classList.add('block');
-                pageHome.classList.remove('hidden');
-                pageCart.classList.add('hidden');
-                pageCart.classList.remove('block');
+                        <div className="grid grid-cols-2 gap-4 mt-6 border-t pt-4">
+                          <div><span className="text-xs text-slate-400 block font-semibold">Total Poin Saya</span><span className="text-2xl font-black text-[#0B8F5A]">{currentUser.points} PTS</span></div>
+                          <div><span className="text-xs text-slate-400 block font-semibold">Voucher Saya</span><span className="text-2xl font-black text-amber-500">{currentUser.myVouchers ? currentUser.myVouchers.length : 0} Voucher</span></div>
+                        </div>
+                      </div>
 
-                // Styling Nav
-                btnHome.classList.remove('text-gray-400');
-                btnHome.classList.add('text-primary');
-                navHome.classList.remove('icon-outlined');
-                
-                btnCart.classList.remove('text-primary');
-                btnCart.classList.add('text-gray-400');
-                navCart.classList.add('icon-outlined');
+                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3">
+                        <h3 className="font-bold text-sm flex items-center gap-2"><Ticket className="w-4 h-4 text-[#0B8F5A]" /> Voucher Diskon Saya ({currentUser.myVouchers ? currentUser.myVouchers.length : 0})</h3>
+                        {(!currentUser.myVouchers || currentUser.myVouchers.length === 0) ? (
+                          <p className="text-xs text-slate-400 italic">Belum ada voucher aktif. Tukarkan poin reward Anda!</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {currentUser.myVouchers.map(v => (
+                              <div key={v.id} className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                                <div><span className="font-bold text-xs block text-slate-800 dark:text-slate-100">{v.name}</span><span className="text-[10px] text-slate-400 font-mono">KODE: {v.code}</span></div>
+                                <span className="text-xs font-black text-[#0B8F5A]">Rp {(v.discountAmount || 0).toLocaleString('id-ID')} OFF</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
 
-                window.scrollTo(0,0);
-            } else {
-                pageHome.classList.remove('block');
-                pageHome.classList.add('hidden');
-                pageCart.classList.remove('hidden');
-                pageCart.classList.add('block');
+                      <button onClick={handleLogout} className="w-full bg-rose-600 text-white py-3 rounded-xl text-xs font-bold shadow flex items-center justify-center gap-2"><LogOut className="w-4 h-4" /> Keluar Akun</button>
+                    </div>
+                  ) : (
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center space-y-4 shadow-md">
+                      <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 mx-auto flex items-center justify-center text-slate-400"><UserCheck className="w-10 h-10" /></div>
+                      <div><h2 className="text-xl font-bold">Anda Belum Login</h2><p className="text-xs text-slate-400 mt-1">Masuk untuk kumpulkan poin reward & voucher.</p></div>
+                      <button onClick={() => { setAuthMode('login'); setIsLoginModalOpen(true); }} className="bg-[#0B8F5A] text-white font-bold px-6 py-3 rounded-xl text-xs shadow-lg">Login / Daftar Member Sekarang</button>
+                    </div>
+                  )}
+                </div>
+              )}
 
-                // Styling Nav
-                btnCart.classList.remove('text-gray-400');
-                btnCart.classList.add('text-primary');
-                navCart.classList.remove('icon-outlined');
-                
-                btnHome.classList.remove('text-primary');
-                btnHome.classList.add('text-gray-400');
-                navHome.classList.add('icon-outlined');
+              {/* FLOATING CART BUTTON */}
+              <div className="fixed bottom-20 md:bottom-8 right-4 z-40">
+                <button onClick={() => { setIsCartOpen(true); setCheckoutStep('cart'); }} className="bg-[#0B8F5A] text-white p-4 rounded-2xl shadow-2xl flex items-center gap-3 border-2 border-amber-400 active:scale-95 transition">
+                  <div className="relative">
+                    <ShoppingCart className="w-6 h-6" />
+                    {totalCartCount > 0 && <span className="absolute -top-2.5 -right-2.5 bg-amber-500 text-slate-900 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">{totalCartCount}</span>}
+                  </div>
+                  <div className="text-left hidden sm:block">
+                    <span className="text-[10px] block font-semibold text-emerald-200">Keranjang Belanja</span>
+                    <span className="text-xs font-extrabold">Rp {subtotalCart.toLocaleString('id-ID')}</span>
+                  </div>
+                </button>
+              </div>
 
-                renderCart();
-                window.scrollTo(0,0);
-            }
-        }
+              {/* MOBILE BOTTOM NAV */}
+              <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-2 py-2 flex justify-around shadow-lg">
+                {[
+                  { id: 'home', label: 'Beranda', icon: Coffee },
+                  { id: 'menu', label: 'Menu', icon: ShoppingBag },
+                  { id: 'reward', label: 'Reward', icon: Gift },
+                  { id: 'orders', label: 'Pesanan', icon: Clock },
+                  { id: 'profile', label: 'Profil', icon: User }
+                ].map(tab => (
+                  <button key={tab.id} onClick={() => setCurrentTab(tab.id)} className={`flex flex-col items-center gap-1 py-1 px-3 transition ${currentTab === tab.id ? 'text-[#0B8F5A] font-bold' : 'text-slate-400'}`}>
+                    <tab.icon className="w-5 h-5" />
+                    <span className="text-[10px]">{tab.label}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </main>
 
-        function checkout() {
-            if(cart.length === 0) return;
+          {/* MODAL AUTHENTIKASI */}
+          {isLoginModalOpen && (
+            <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+              <form onSubmit={handleAuthSubmit} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+                <div className="flex items-center justify-between border-b pb-3">
+                  <h3 className="font-bold text-base flex items-center gap-2">
+                    <LogIn className="w-5 h-5 text-[#0B8F5A]" />
+                    {authMode === 'login' ? 'Login Member' : 'Daftar Member Baru'}
+                  </h3>
+                  <button type="button" onClick={() => setIsLoginModalOpen(false)} className="text-slate-400"><X className="w-5 h-5" /></button>
+                </div>
 
-            const name = document.getElementById('co-name').value.trim();
-            const phone = document.getElementById('co-phone').value.trim();
-            const method = document.querySelector('input[name="co-method"]:checked').value;
-            const address = document.getElementById('co-address').value.trim();
-            const orderNote = document.getElementById('co-note').value.trim();
+                {authMode === 'register' && (
+                  <div>
+                    <label className="text-xs font-bold block mb-1">Nama Lengkap *</label>
+                    <input name="name" type="text" required placeholder="Contoh: Budi Santoso" className="w-full p-3 rounded-xl border dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none" />
+                  </div>
+                )}
 
-            // Validasi Input
-            if(!name || !phone) {
-                showToast('Mohon lengkapi Nama dan No WhatsApp');
-                return;
-            }
-            if(method === 'Delivery' && !address) {
-                showToast('Mohon isi alamat pengiriman');
-                return;
-            }
+                <div>
+                  <label className="text-xs font-bold block mb-1">Nomor WhatsApp / HP *</label>
+                  <input name="phone" type="tel" required placeholder="081234567890" className="w-full p-3 rounded-xl border dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-mono outline-none" />
+                </div>
 
-            // Generate Pesan WA
-            let msg = `Halo Ruang Seduh,\n\nSaya ingin memesan:\n\n====================\n\n`;
-            let totalSemua = 0;
+                <div>
+                  <label className="text-xs font-bold block mb-1">Kata Sandi (Password) *</label>
+                  <input name="password" type="password" required placeholder="******" className="w-full p-3 rounded-xl border dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none" />
+                </div>
 
-            cart.forEach((item, index) => {
-                const subtotal = item.price * item.qty;
-                totalSemua += subtotal;
+                <button type="submit" disabled={isLoadingAuth} className="w-full bg-[#0B8F5A] text-white py-3.5 rounded-xl font-bold text-xs shadow-lg transition flex justify-center">
+                  {isLoadingAuth ? 'Memproses...' : authMode === 'login' ? 'Masuk Sesi' : 'Daftar & Dapatkan +100 Poin'}
+                </button>
 
-                msg += `${index + 1}. ${item.name}\n`;
-                msg += `Harga : ${formatRp(item.price)}\n`;
-                msg += `Jumlah : ${item.qty}\n`;
-                msg += `Es : ${item.es}\n`;
-                msg += `Gula : ${item.gula}\n`;
-                if(item.note) msg += `Catatan : ${item.note}\n`;
-                msg += `Subtotal : ${formatRp(subtotal)}\n\n====================\n\n`;
-            });
+                <div className="text-center pt-2">
+                  <button type="button" onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')} className="text-xs font-bold text-[#0B8F5A] hover:underline">
+                    {authMode === 'login' ? 'Belum punya akun? Daftar Sekarang' : 'Sudah punya akun? Login di sini'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
 
-            msg += `TOTAL : *${formatRp(totalSemua)}*\n\n`;
-            msg += `Nama : ${name}\n`;
-            msg += `No WA : ${phone}\n`;
-            msg += `Metode : ${method}\n`;
-            if(method === 'Delivery') msg += `Alamat : ${address}\n`;
-            if(orderNote) msg += `Catatan Pesanan : ${orderNote}\n\n`;
-            msg += `Terima kasih.`;
+          {/* MODAL DETAIL MINUMAN & PORSI */}
+          {selectedProduct && (
+            <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl">
+                <div className="relative h-48">
+                  <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                  <button onClick={() => setSelectedProduct(null)} className="absolute top-3 right-3 bg-slate-900/70 text-white p-2 rounded-full"><X className="w-5 h-5" /></button>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div><h3 className="text-xl font-bold">{selectedProduct.name}</h3><p className="text-xs text-slate-500 mt-1">{selectedProduct.desc}</p></div>
 
-            // Buka WhatsApp
-            const waUrl = `https://wa.me/${phoneTarget}?text=${encodeURIComponent(msg)}`;
-            window.open(waUrl, '_blank');
-            
-            // Opsional: Kosongkan keranjang setelah checkout (Buka komentar jika ingin aktif)
-            // cart = [];
-            // saveCart();
-            // switchTab('home');
-        }
-    </script>
+                  <div>
+                    <label className="text-xs font-bold uppercase block mb-2 text-slate-500">Tingkat Gula</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {['Normal Sugar', 'Low Sugar', 'Extra Sugar'].map(level => (
+                        <button key={level} onClick={() => setSugarLevel(level)} className={`py-2 rounded-xl text-xs font-bold border transition ${sugarLevel === level ? 'bg-[#0B8F5A] text-white' : 'bg-slate-50 dark:bg-slate-800'}`}>{level}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold uppercase block mb-1 text-slate-500">Catatan Pesanan</label>
+                    <textarea value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} placeholder="Contoh: Es batu sedikit..." className="w-full bg-slate-50 dark:bg-slate-800 border p-2.5 rounded-xl text-xs outline-none" rows={2} />
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-b py-3">
+                    <span className="text-xs font-bold uppercase text-slate-500">Jumlah Porsi</span>
+                    <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border">
+                      <button onClick={() => setItemQty(prev => Math.max(1, prev - 1))} className="w-8 h-8 rounded-xl bg-white dark:bg-slate-700 flex items-center justify-center font-bold"><Minus className="w-4 h-4" /></button>
+                      <span className="font-extrabold text-sm w-6 text-center">{itemQty}</span>
+                      <button onClick={() => setItemQty(prev => prev + 1)} className="w-8 h-8 rounded-xl bg-[#0B8F5A] text-white flex items-center justify-center font-bold"><Plus className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+
+                  <button onClick={handleAddToCart} className="w-full bg-[#0B8F5A] text-white py-3.5 rounded-xl font-bold text-xs shadow-lg flex items-center justify-between px-5">
+                    <span>Tambah ke Keranjang ({itemQty} Porsi)</span>
+                    <span className="font-black text-amber-300">Rp {(selectedProduct.price * itemQty).toLocaleString('id-ID')}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MODAL KERANJANG & CHECKOUT */}
+          {isCartOpen && (
+            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-end sm:p-4">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full sm:max-w-md h-full sm:h-[90vh] sm:rounded-3xl flex flex-col justify-between shadow-2xl overflow-hidden">
+                <div className="p-4 border-b flex justify-between items-center"><h3 className="font-bold text-base">{checkoutStep === 'cart' ? 'Keranjang Belanja' : 'Checkout & Pembayaran'}</h3><button onClick={() => setIsCartOpen(false)} className="text-slate-400"><X className="w-5 h-5" /></button></div>
+
+                <div className="p-4 flex-1 overflow-y-auto space-y-4">
+                  {checkoutStep === 'cart' ? (
+                    cart.length === 0 ? <p className="text-center py-20 text-slate-400 text-xs">Keranjang Anda masih kosong.</p> : (
+                      cart.map(item => (
+                        <div key={item.cartItemId} className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl flex justify-between items-center">
+                          <div>
+                            <h4 className="font-bold text-sm">{item.name}</h4>
+                            <span className="text-[10px] text-amber-600 font-bold">{item.sugarLevel}</span>
+                            {item.notes && <p className="text-[10px] text-slate-400 italic">"{item.notes}"</p>}
+                            <p className="text-xs font-black text-[#0B8F5A] mt-0.5">Rp {(item.price * item.qty).toLocaleString('id-ID')}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <button onClick={() => updateCartQty(item.cartItemId, -1)} className="p-1 bg-slate-200 rounded"><Minus className="w-3.5 h-3.5" /></button>
+                            <span className="text-xs font-bold px-1">{item.qty}</span>
+                            <button onClick={() => updateCartQty(item.cartItemId, 1)} className="p-1 bg-slate-200 rounded"><Plus className="w-3.5 h-3.5" /></button>
+                          </div>
+                        </div>
+                      ))
+                    )
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl space-y-2">
+                        <div className="flex justify-between items-center text-xs font-bold text-amber-600">
+                          <span>Voucher Penukaran Poin</span>
+                          <button onClick={() => setShowVoucherSelector(!showVoucherSelector)} className="text-[#0B8F5A]">{showVoucherSelector ? 'Tutup' : 'Pilih Voucher'}</button>
+                        </div>
+                        {selectedVoucher ? (
+                          <div className="flex justify-between items-center"><p className="text-xs font-bold text-slate-800 dark:text-slate-200">{selectedVoucher.name} (-Rp {discountAmount.toLocaleString('id-ID')})</p><button onClick={() => setSelectedVoucher(null)} className="text-rose-500 text-[10px] font-bold">Batal</button></div>
+                        ) : <p className="text-[11px] text-slate-400">Belum ada voucher dipasang.</p>}
+                        {showVoucherSelector && (
+                          <div className="space-y-2 pt-2 border-t">
+                            {(!currentUser || !currentUser.myVouchers || currentUser.myVouchers.length === 0) ? (
+                              <p className="text-[11px] text-slate-400 italic">Anda belum memiliki voucher.</p>
+                            ) : (
+                              <div className="space-y-1 max-h-36 overflow-y-auto">
+                                {currentUser.myVouchers.map(v => (
+                                  <div key={v.id} onClick={() => { setSelectedVoucher(v); setShowVoucherSelector(false); }} className="p-2 bg-white dark:bg-slate-800 rounded-xl text-xs font-bold cursor-pointer flex justify-between items-center border">
+                                    <div><span className="block">{v.name}</span><span className="text-[9px] text-slate-400">Rp {(v.discountAmount || 0).toLocaleString('id-ID')} OFF</span></div>
+                                    <span className="text-[#0B8F5A] bg-emerald-50 px-2 py-0.5 rounded text-[10px]">Gunakan</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border space-y-2">
+                        <span className="text-xs font-bold uppercase text-slate-500 block mb-1">Rincian Harga</span>
+                        <div className="flex justify-between text-xs"><span className="text-slate-500">Subtotal</span><span className="font-bold">Rp {subtotalCart.toLocaleString('id-ID')}</span></div>
+                        {discountAmount > 0 && <div className="flex justify-between text-xs text-emerald-600"><span>Diskon ({selectedVoucher?.name})</span><span className="font-bold">-Rp {discountAmount.toLocaleString('id-ID')}</span></div>}
+                        <div className="border-t pt-2 flex justify-between items-center"><span className="text-xs font-bold">Total Bayar</span><span className="text-xl font-black text-[#0B8F5A]">Rp {finalTotalAmount.toLocaleString('id-ID')}</span></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {cart.length > 0 && (
+                  <div className="p-4 border-t space-y-2">
+                    {checkoutStep === 'cart' ? (
+                      <button onClick={() => setCheckoutStep('payment')} className="w-full bg-[#0B8F5A] text-white py-3.5 rounded-xl font-bold text-sm">Lanjut ke Pembayaran</button>
+                    ) : (
+                      <button onClick={handleProcessCheckout} className="w-full bg-amber-500 text-slate-900 py-3.5 rounded-xl font-extrabold text-sm">Konfirmasi Pesanan</button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* MODAL STRUK DIGITAL */}
+          {activeOrderReceipt && (
+            <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 border rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+                <button onClick={() => setActiveOrderReceipt(null)} className="absolute top-4 right-4 text-slate-400"><X className="w-5 h-5" /></button>
+                <div className="w-12 h-12 bg-emerald-100 text-[#0B8F5A] rounded-full flex items-center justify-center mx-auto"><Check className="w-6 h-6" /></div>
+                <h3 className="font-bold text-lg">Struk Digital Pesanan</h3>
+                <span className="font-mono font-black text-amber-600 text-xs block">{activeOrderReceipt.orderNo}</span>
+                <div className="p-4 bg-white border-2 border-dashed rounded-2xl mx-auto w-48 h-48 flex flex-col items-center justify-center shadow-inner">
+                  <QrCode size={120} className="text-slate-900" />
+                  <span className="text-[9px] font-mono font-bold text-slate-500 mt-2 truncate w-full">{activeOrderReceipt.qrReceiptCode}</span>
+                </div>
+                <p className="text-xs text-slate-500">Pindai QR ini untuk klaim <span className="font-bold text-[#0B8F5A]">+{activeOrderReceipt.pointsEarned} Poin</span>.</p>
+                <button onClick={() => { handleClaimQR(activeOrderReceipt.qrReceiptCode); setActiveOrderReceipt(null); }} className="w-full bg-amber-500 text-slate-900 font-bold py-3 rounded-xl shadow text-xs flex items-center justify-center gap-2"><QrCode className="w-4 h-4" /> Klaim Poin Struk Ini Now</button>
+              </div>
+            </div>
+          )}
+
+          {/* MODAL SCANNER QR MANUAL */}
+          {qrModalOpen && (
+            <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 border rounded-3xl max-w-sm w-full p-6 space-y-4 text-center shadow-2xl relative">
+                <button onClick={() => setQrModalOpen(false)} className="absolute top-4 right-4 text-slate-400"><X className="w-5 h-5" /></button>
+                <QrCode className="w-10 h-10 text-[#0B8F5A] mx-auto" />
+                <h3 className="font-bold text-lg">Scan / Input Kode QR Struk</h3>
+                <p className="text-xs text-slate-500">Ketikkan kode QR unik dari struk belanja Anda untuk menambah poin.</p>
+                <input type="text" value={scanQRInput} onChange={(e) => setScanQRInput(e.target.value)} placeholder="QR-POINT-RS-123456..." className="w-full bg-slate-50 dark:bg-slate-800 border p-3 rounded-xl text-xs font-mono outline-none" />
+                <button onClick={() => handleClaimQR()} className="w-full bg-[#0B8F5A] text-white font-bold py-3 rounded-xl shadow text-xs">Proses Klaim Poin</button>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>
